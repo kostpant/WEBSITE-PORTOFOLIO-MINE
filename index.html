@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ντένις Σνέλενμπεργκ • Ελεύθερος Επαγγελματίας Σχεδιαστής & Προγραμματιστής</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #1C1D20;
+      --text: #FFFFFF;
+      --sec-text: #999999;
+    }
+    body, html {
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      cursor: none;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; cursor: none; }
+    ul { list-style: none; padding: 0; margin: 0; }
+    
+    /* Custom Cursor */
+    .cursor {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 12px;
+      height: 12px;
+      background-color: #fff;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.3s, height 0.3s, background-color 0.3s;
+      mix-blend-mode: difference;
+    }
+    .cursor.active {
+      width: 60px;
+      height: 60px;
+      background-color: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(2px);
+    }
+
+    /* Layout */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 5vw;
+    }
+    
+    /* Header */
+    header {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding-bottom: 10vh;
+      position: relative;
+    }
+    .nav-bar {
+      position: absolute;
+      top: 2rem;
+      left: 5vw;
+      right: 5vw;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+    }
+    .magnetic {
+      display: inline-block;
+      padding: 10px;
+    }
+    
+    /* Hero */
+    .personal-image {
+      position: absolute;
+      top: 15vh;
+      right: 15vw;
+      width: 30vw;
+      max-width: 400px;
+      height: 50vh;
+      overflow: hidden;
+      z-index: -1;
+      opacity: 0.8;
+    }
+    .personal-image img {
+      width: 100%;
+      height: 120%; /* Extra height for parallax */
+      object-fit: cover;
+      transform: translateY(-10%); /* Initial offset */
+    }
+
+    .hero-location {
+      position: absolute;
+      left: 5vw;
+      top: 30vh;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .hero-location p {
+      max-width: 150px;
+      font-size: 1.2rem;
+      line-height: 1.4;
+    }
+    .globe {
+      width: 60px;
+      height: 60px;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 50%;
+      position: relative;
+      animation: spin 10s linear infinite;
+    }
+    .globe::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: rgba(255,255,255,0.2);
+    }
+    .globe::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 1px;
+      height: 100%;
+      background: rgba(255,255,255,0.2);
+    }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+    
+    .scroll-badge {
+      position: absolute;
+      bottom: 10vh;
+      right: 5vw;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: spin 10s linear infinite;
+      z-index: 10;
+    }
+    .scroll-badge svg {
+      width: 100%;
+      height: 100%;
+    }
+    .scroll-badge-text {
+      font-size: 13px;
+      letter-spacing: 3px;
+      fill: #fff;
+      text-transform: uppercase;
+    }
+    .scroll-badge-arrow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 24px;
+      /* Counter-rotate the arrow so it stays upright */
+      animation: counter-spin 10s linear infinite;
+    }
+    @keyframes counter-spin { 100% { transform: translate(-50%, -50%) rotate(-360deg); } }
+
+    .hero-subtitle {
+      font-size: 1.5rem;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .hero-title {
+      font-size: 11vw;
+      font-weight: 500;
+      line-height: 1;
+      margin: 0;
+      letter-spacing: -0.05em;
+      white-space: nowrap;
+      will-change: transform;
+    }
+    .reveal-text {
+      overflow: hidden;
+      display: inline-block;
+    }
+    .reveal-text span {
+      display: inline-block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    /* Intro */
+    .intro {
+      padding: 15vh 0;
+      display: flex;
+      justify-content: space-between;
+      gap: 5rem;
+    }
+    .intro h4 {
+      font-size: 2.5rem;
+      font-weight: 400;
+      line-height: 1.4;
+      max-width: 800px;
+      margin: 0;
+    }
+    .intro-desc {
+      max-width: 300px;
+      color: var(--sec-text);
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+    .btn-round {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: #1C1D20;
+      border: 1px solid rgba(255,255,255,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 2rem;
+      transition: background 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-round::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      border-radius: 50%;
+      transition: top 0.4s ease;
+      z-index: 0;
+    }
+    .btn-round:hover::after {
+      top: 0;
+      border-radius: 0;
+    }
+    .btn-round span {
+      position: relative;
+      z-index: 1;
+      transition: color 0.3s;
+    }
+    .btn-round:hover span {
+      color: #000;
+    }
+
+    /* Work */
+    .work {
+      padding: 10vh 0;
+    }
+    .work-title {
+      color: var(--sec-text);
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 3rem;
+    }
+    .work-list {
+      position: relative;
+    }
+    .stripe {
+      width: 0%;
+      height: 1px;
+      background-color: rgba(255, 255, 255, 0.2);
+      margin: 0;
+    }
+    .work-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 3rem 0;
+      position: relative;
+      z-index: 2;
+      transition: opacity 0.3s;
+    }
+    .work-item:hover {
+      opacity: 0.5;
+    }
+    .work-item h2 {
+      font-size: 4vw;
+      margin: 0;
+      font-weight: 400;
+      transition: transform 0.3s;
+    }
+    .work-item p {
+      margin: 0;
+      transition: transform 0.3s;
+    }
+    .work-item:hover h2 {
+      transform: translateX(20px);
+    }
+    .work-item:hover p {
+      transform: translateX(-20px);
+    }
+    
+    /* Parallax Image Hover */
+    .hover-image-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 350px;
+      height: 350px;
+      pointer-events: none;
+      z-index: 10;
+      opacity: 0;
+      transform: scale(0.8);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hover-image-inner {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .hover-image {
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+    }
+    .hover-image.active {
+      opacity: 1;
+    }
+    
+    /* Footer */
+    footer {
+      padding: 15vh 0 5vh;
+      text-align: center;
+      position: relative;
+    }
+    .footer-title {
+      font-size: 8vw;
+      font-weight: 500;
+      line-height: 1;
+      margin-bottom: 5vh;
+      letter-spacing: -0.05em;
+    }
+    .footer-title img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      vertical-align: middle;
+      margin-right: 20px;
+      object-fit: cover;
+    }
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10vh;
+      text-align: left;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 2rem;
+    }
+    .footer-col h5 {
+      color: var(--sec-text);
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .footer-col p, .footer-col a {
+      margin: 0.5rem 0;
+      display: block;
+    }
+    .btn-normal {
+      display: inline-block;
+      padding: 1rem 2rem;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 50px;
+      margin: 0.5rem;
+      transition: background 0.3s, color 0.3s;
+    }
+    .btn-normal:hover {
+      background: #fff;
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Custom Cursor -->
+  <div class="cursor"></div>
+
+  <!-- Hover Image Container -->
+  <div class="hover-image-container">
+    <div class="hover-image-inner">
+      <div class="hover-image" style="background-image: url('https://dennissnellenberg.com/media/pages/work/twice/0ab7e43954-1710404752/thumbnail-twice-810x810-crop-q72.jpg');" data-index="0"></div>
+      <div class="hover-image" style="background-image: url('https://dennissnellenberg.com/media/pages/work/the-damai/b511d32d21-1710452224/thumbnail-thedamai-v2-810x810-crop-q72.jpg');" data-index="1"></div>
+      <div class="hover-image" style="background-image: url('https://dennissnellenberg.com/media/pages/work/fabric/ac07564a5f-1688453092/thumbnail-fabric-darkgray-810x810-crop-q72.jpg');" data-index="2"></div>
+      <div class="hover-image" style="background-image: url('https://dennissnellenberg.com/media/pages/work/aanstekelijk/441187fb44-1687423090/thumbnail-aanstekelijk-810x810-crop-q72.jpg');" data-index="3"></div>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="magnetic">© Κώδικας από τον Ντένις Σνέλενμπεργκ</div>
+    <div class="nav-links">
+      <a href="#" class="magnetic">Δουλειά</a>
+      <a href="#" class="magnetic">Σχετικά</a>
+      <a href="#" class="magnetic">Επικοινωνία</a>
+      <a href="#" class="magnetic">Μενού</a>
+    </div>
+  </div>
+
+  <div class="container">
+    <header>
+      <div class="personal-image">
+        <img src="https://dennissnellenberg.com/assets/img/DSC07033.jpg" alt="Dennis Snellenberg">
+      </div>
+      
+      <div class="hero-location">
+        <p>Βρίσκεται στην Ολλανδία</p>
+        <div class="globe"></div>
+      </div>
+      
+      <div class="scroll-badge">
+        <svg viewBox="0 0 100 100">
+          <path id="circlePath" d="M 50, 50 m -40, 0 a 40,40 0 1,1 80,0 a 40,40 0 1,1 -80,0" fill="none" />
+          <text>
+            <textPath href="#circlePath" class="scroll-badge-text">
+              ΚΑΝΤΕ SCROLL • ΚΑΝΤΕ SCROLL • 
+            </textPath>
+          </text>
+        </svg>
+        <div class="scroll-badge-arrow">↓</div>
+      </div>
+
+      <div class="hero-subtitle reveal-text">
+        <span>↗ Ελεύθερος Επαγγελματίας Σχεδιαστής & Προγραμματιστής</span>
+      </div>
+      <h1 class="hero-title reveal-text">
+        <span>Ντένις Σνέλενμπεργκ —</span>
+      </h1>
+    </header>
+
+    <section class="intro">
+      <h4>
+        Βοηθάω τα brands να ξεχωρίσουν στην ψηφιακή εποχή. Μαζί θα θέσουμε το νέο status quo. Χωρίς ανοησίες, πάντα στην αιχμή της τεχνολογίας.
+      </h4>
+      <div>
+        <p class="intro-desc">
+          Ο συνδυασμός του πάθους μου για το σχεδιασμό, τον κώδικα και την αλληλεπίδραση με τοποθετεί σε μια μοναδική θέση στον κόσμο του web design.
+        </p>
+        <a href="#" class="btn-round magnetic">
+          <span>Σχετικά με μένα</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="work">
+      <div class="work-title">Πρόσφατη δουλειά</div>
+      <div class="work-list">
+        <div class="stripe"></div>
+        <div class="work-item" data-index="0">
+          <h2>TWICE</h2>
+          <p>Αλληλεπίδραση & Ανάπτυξη</p>
+        </div>
+        <div class="stripe"></div>
+        <div class="work-item" data-index="1">
+          <h2>The Damai</h2>
+          <p>Σχεδιασμός & Ανάπτυξη</p>
+        </div>
+        <div class="stripe"></div>
+        <div class="work-item" data-index="2">
+          <h2>FABRIC™</h2>
+          <p>Σχεδιασμός & Ανάπτυξη</p>
+        </div>
+        <div class="stripe"></div>
+        <div class="work-item" data-index="3">
+          <h2>Aanstekelijk</h2>
+          <p>Σχεδιασμός & Ανάπτυξη</p>
+        </div>
+        <div class="stripe"></div>
+      </div>
+      <div style="text-align: center; margin-top: 5rem;">
+        <a href="#" class="btn-normal magnetic">Περισσότερη δουλειά</a>
+      </div>
+    </section>
+
+    <footer>
+      <h2 class="footer-title">
+        <img src="https://dennissnellenberg.com/assets/img/DSC07033.jpg" alt="Dennis">
+        Ας δουλέψουμε μαζί
+      </h2>
+      <div style="text-align: left;">
+        <a href="mailto:info@dennissnellenberg.com" class="btn-normal magnetic">info@dennissnellenberg.com</a>
+        <a href="tel:+31627847430" class="btn-normal magnetic">+31 6 27 84 74 30</a>
+      </div>
+      
+      <div class="footer-bottom">
+        <div class="footer-col">
+          <h5>Έκδοση</h5>
+          <p>2024 © Edition</p>
+        </div>
+        <div class="footer-col">
+          <h5>Τοπική ώρα</h5>
+          <p id="local-time">00:00 PM CET</p>
+        </div>
+        <div class="footer-col">
+          <h5>Κοινωνικά Δίκτυα</h5>
+          <a href="#" class="magnetic">Awwwards</a>
+          <a href="#" class="magnetic">Instagram</a>
+          <a href="#" class="magnetic">Twitter</a>
+          <a href="#" class="magnetic">LinkedIn</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
+  <script>
+    // Register ScrollTrigger
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Initialize Lenis for smooth scrolling
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      direction: 'vertical',
+      gestureDirection: 'vertical',
+      smooth: true,
+      mouseMultiplier: 1,
+      smoothTouch: false,
+      touchMultiplier: 2,
+      infinite: false,
+    });
+
+    // Tie Lenis with GSAP ScrollTrigger
+    lenis.on('scroll', ScrollTrigger.update);
+    
+    gsap.ticker.add((time) => {
+      lenis.raf(time * 1000);
+    });
+    
+    gsap.ticker.lagSmoothing(0, 0);
+
+    // Custom Cursor
+    const cursor = document.querySelector('.cursor');
+    const hoverElements = document.querySelectorAll('a, .magnetic, .work-item');
+    
+    let mouseX = 0;
+    let mouseY = 0;
+    let cursorX = 0;
+    let cursorY = 0;
+
+    window.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+
+    gsap.ticker.add(() => {
+      cursorX += (mouseX - cursorX) * 0.2;
+      cursorY += (mouseY - cursorY) * 0.2;
+      cursor.style.transform = `translate(${cursorX}px, ${cursorY}px)`;
+    });
+
+    hoverElements.forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('active'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('active'));
+    });
+
+    // Magnetic Buttons
+    const magnetics = document.querySelectorAll('.magnetic');
+    magnetics.forEach(btn => {
+      btn.addEventListener('mousemove', (e) => {
+        const rect = btn.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        
+        gsap.to(btn, {
+          x: x * 0.4,
+          y: y * 0.4,
+          duration: 0.5,
+          ease: 'power2.out'
+        });
+      });
+      
+      btn.addEventListener('mouseleave', () => {
+        gsap.to(btn, {
+          x: 0,
+          y: 0,
+          duration: 0.5,
+          ease: 'power2.out'
+        });
+      });
+    });
+
+    // Text Reveal Animation (Runs immediately)
+    gsap.from('.reveal-text span', {
+      y: '100%',
+      duration: 1,
+      stagger: 0.1,
+      ease: 'power4.out',
+      delay: 0.2
+    });
+
+    // 1. Hero Text Horizontal Scroll
+    gsap.to('.hero-title', {
+      xPercent: -30,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: 'header',
+        start: 'top top',
+        end: 'bottom top',
+        scrub: true
+      }
+    });
+
+    // 2. Hero Image Parallax
+    gsap.to('.personal-image img', {
+      yPercent: 20,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: 'header',
+        start: 'top top',
+        end: 'bottom top',
+        scrub: true
+      }
+    });
+
+    // 4. Stripe Animations
+    const stripes = document.querySelectorAll('.stripe');
+    stripes.forEach(stripe => {
+      gsap.to(stripe, {
+        width: '100%',
+        duration: 1.2,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: stripe,
+          start: 'top 90%',
+        }
+      });
+    });
+
+    // Parallax Image Hover for Work Items
+    const workItems = document.querySelectorAll('.work-item');
+    const hoverContainer = document.querySelector('.hover-image-container');
+    const hoverImages = document.querySelectorAll('.hover-image');
+    const hoverInner = document.querySelector('.hover-image-inner');
+    
+    let hoverX = 0;
+    let hoverY = 0;
+
+    workItems.forEach(item => {
+      item.addEventListener('mouseenter', (e) => {
+        const index = item.getAttribute('data-index');
+        hoverImages.forEach(img => img.classList.remove('active'));
+        if(hoverImages[index]) {
+          hoverImages[index].classList.add('active');
+        }
+        
+        gsap.to(hoverContainer, {
+          opacity: 1,
+          scale: 1,
+          duration: 0.4,
+          ease: 'power2.out'
+        });
+      });
+      
+      item.addEventListener('mousemove', (e) => {
+        hoverX += (e.clientX - hoverX) * 0.1;
+        hoverY += (e.clientY - hoverY) * 0.1;
+        
+        gsap.to(hoverContainer, {
+          x: e.clientX - 175,
+          y: e.clientY - 175,
+          duration: 0.5,
+          ease: 'power2.out'
+        });
+        
+        // Inner image subtle parallax
+        const rect = item.getBoundingClientRect();
+        const relX = e.clientX - rect.left;
+        const relY = e.clientY - rect.top;
+        
+        gsap.to(hoverInner, {
+          x: (relX - rect.width/2) * 0.2,
+          y: (relY - rect.height/2) * 0.2,
+          duration: 0.5,
+          ease: 'power2.out'
+        });
+      });
+      
+      item.addEventListener('mouseleave', () => {
+        gsap.to(hoverContainer, {
+          opacity: 0,
+          scale: 0.8,
+          duration: 0.4,
+          ease: 'power2.out'
+        });
+        gsap.to(hoverInner, {
+          x: 0,
+          y: 0,
+          duration: 0.5,
+          ease: 'power2.out'
+        });
+      });
+    });
+
+    // Local Time
+    function updateTime() {
+      const now = new Date();
+      const timeString = now.toLocaleTimeString('el-GR', { 
+        hour: '2-digit', 
+        minute: '2-digit',
+        timeZone: 'Europe/Athens'
+      }) + ' EET';
+      const timeEl = document.getElementById('local-time');
+      if(timeEl) timeEl.textContent = timeString;
+    }
+    setInterval(updateTime, 1000);
+    updateTime();
+
+  </script>
+</body>
+</html>

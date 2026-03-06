@@ -1,0 +1,12 @@
+PUT YOUR VIDEOS IN THIS FOLDER
+================================
+
+Drag and drop your mp4 video files here:
+
+- gallery-2.mp4    → horizontal scroll gallery video 2
+- gallery-4.mp4    → horizontal scroll gallery video 4
+- gallery-5.mp4    → horizontal scroll gallery video 5
+- gallery-7.mp4    → horizontal scroll gallery video 7
+
+Videos should be short loops (5-15 seconds), muted, mp4 format.
+After adding your files, refresh index.html in your browser!

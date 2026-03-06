@@ -1,0 +1,1529 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portfolio Editor — Κωνσταντίνος</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600&display=swap');
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #070709;
+            --surface: #0e1014;
+            --surface-hover: #16181d;
+            --border: #21242c;
+            --accent: #6c63ff;
+            --accent-hover: #5b52e8;
+            --accent2: #a78bfa;
+            --text: #f0f2f5;
+            --muted: #8e94a8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --radius: 14px;
+            --sidebar-width: 280px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        h1,
+        h2,
+        h3,
+        .topbar h1 {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* Webkit scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--muted);
+        }
+
+        /* Top bar */
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(7, 7, 9, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 32px;
+            height: 64px;
+        }
+
+        .topbar h1 {
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .topbar h1 .logo-icon {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 16px;
+        }
+
+        .topbar h1 span {
+            color: var(--accent2);
+            font-weight: 400;
+            opacity: 0.8;
+        }
+
+        .status-pill {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            color: var(--muted);
+            background: var(--surface);
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--success);
+        }
+
+        .topbar-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-save,
+        .btn-dl,
+        .btn-preview {
+            cursor: pointer;
+            border: none;
+            border-radius: 10px;
+            padding: 9px 18px;
+            font-size: 13px;
+            font-weight: 600;
+            font-family: inherit;
+            transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-save {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .btn-save:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(108, 99, 255, 0.3);
+        }
+
+        .btn-dl {
+            background: var(--surface);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-dl:hover {
+            background: var(--surface-hover);
+            border-color: var(--accent2);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        /* Layout */
+        .layout {
+            display: grid;
+            grid-template-columns: var(--sidebar-width) 1fr;
+            min-height: calc(100vh - 64px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            border-right: 1px solid var(--border);
+            padding: 32px 0;
+            position: sticky;
+            top: 64px;
+            height: calc(100vh - 64px);
+            overflow-y: auto;
+            background: var(--bg);
+        }
+
+        .sidebar-section-title {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: var(--muted);
+            padding: 0 28px 12px;
+            opacity: 0.6;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 28px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--muted);
+            border-left: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .sidebar-link:hover {
+            color: var(--text);
+            background: var(--surface);
+        }
+
+        .sidebar-link.active {
+            color: var(--accent2);
+            border-left-color: var(--accent2);
+            background: rgba(167, 139, 250, 0.08);
+        }
+
+        .sidebar-link .icon {
+            font-size: 18px;
+            width: 20px;
+        }
+
+        /* Hint box in sidebar */
+        .hint-box {
+            margin: 32px 20px 0;
+            background: linear-gradient(135deg, rgba(108, 99, 255, .15), rgba(167, 139, 250, .05));
+            border: 1px solid rgba(167, 139, 250, .2);
+            border-radius: 12px;
+            padding: 18px;
+            font-size: 12px;
+            color: var(--text);
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        .hint-box strong {
+            color: var(--accent2);
+            font-weight: 600;
+        }
+
+        /* Main panel */
+        .editor-main {
+            padding: 48px 64px;
+            overflow-y: auto;
+            max-width: 1000px;
+        }
+
+        .section-block {
+            margin-bottom: 72px;
+            scroll-margin-top: 100px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-block h2 {
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: var(--accent2);
+            margin-bottom: 28px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Form fields */
+        .field-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .field-row.single {
+            grid-template-columns: 1fr;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+
+        .field label {
+            font-size: 11.5px;
+            font-weight: 500;
+            color: var(--muted);
+            letter-spacing: .03em;
+        }
+
+        .field input,
+        .field textarea,
+        .field select {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 13.5px;
+            padding: 10px 14px;
+            outline: none;
+            transition: border-color .2s;
+            width: 100%;
+        }
+
+        .field input:focus,
+        .field textarea:focus {
+            border-color: var(--accent);
+        }
+
+        .field textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .field input[type="color"] {
+            height: 42px;
+            padding: 4px 8px;
+            cursor: pointer;
+        }
+
+        /* Drop zones */
+        .dropzone {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 16px;
+            cursor: pointer;
+            transition: .2s;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            min-height: 140px;
+            background: var(--surface);
+        }
+
+        .dropzone:hover,
+        .dropzone.drag-over {
+            border-color: var(--accent);
+            background: rgba(108, 99, 255, .06);
+        }
+
+        .dropzone input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .dropzone .dz-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .dropzone .dz-label {
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .dropzone .dz-label strong {
+            color: var(--accent2);
+        }
+
+        .dropzone .dz-preview {
+            position: absolute;
+            inset: 0;
+            object-fit: cover;
+            border-radius: calc(var(--radius) - 2px);
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .dropzone .dz-filename {
+            font-size: 11px;
+            color: var(--success);
+            margin-top: 6px;
+            font-weight: 500;
+        }
+
+        .dropzone .dz-clear {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(0, 0, 0, .6);
+            border: none;
+            color: #fff;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-size: 12px;
+            z-index: 2;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dropzone.has-file .dz-clear {
+            display: flex;
+        }
+
+        .dropzone.has-file .dz-icon,
+        .dropzone.has-file .dz-label {
+            opacity: 0;
+        }
+
+        /* Gallery grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .gallery-slot {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .gallery-slot .slot-label {
+            font-size: 10px;
+            color: var(--muted);
+            text-align: center;
+        }
+
+        /* Project cards */
+        .project-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .project-card-header {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent2);
+            margin-bottom: 14px;
+        }
+
+        .project-inner {
+            display: grid;
+            grid-template-columns: 160px 1fr;
+            gap: 16px;
+        }
+
+        /* Toast */
+        #toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--success);
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            transform: translateY(80px);
+            opacity: 0;
+            transition: .3s cubic-bezier(.34, 1.56, .64, 1);
+            z-index: 999;
+        }
+
+        #toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Modal */
+        #modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .7);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #modal-overlay.open {
+            display: flex;
+        }
+
+        #modal-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            width: 680px;
+            max-width: 96vw;
+        }
+
+        #modal-box h3 {
+            margin-bottom: 12px;
+            font-size: 15px;
+        }
+
+        #modal-box p {
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 12px;
+        }
+
+        #modal-code {
+            width: 100%;
+            height: 260px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: #a5f3fc;
+            font-family: monospace;
+            font-size: 11px;
+            padding: 12px;
+            resize: none;
+            outline: none;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 14px;
+            justify-content: flex-end;
+        }
+
+        .btn-copy,
+        .btn-close-modal {
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            padding: 9px 18px;
+            font-size: 13px;
+            font-weight: 600;
+            font-family: inherit;
+        }
+
+        .btn-copy {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .btn-close-modal {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--muted);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="topbar">
+        <h1>
+            <div class="logo-icon">P</div>
+            Portfolio Editor <span>/ Κωνσταντίνος</span>
+            <div class="status-pill">
+                <div class="status-dot"></div>
+                <span id="save-status">System Ready</span>
+            </div>
+        </h1>
+        <div class="topbar-actions">
+            <button class="btn-dl" onclick="window.previewLive()">
+                <span>👁️</span> Preview Site
+            </button>
+            <button class="btn-save" onclick="generateAndShow()">
+                <span>🚀</span> Finish & Export
+            </button>
+        </div>
+    </div>
+
+    <div class="layout">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-section-title">Sections</div>
+            <div class="sidebar-link active" onclick="goTo('section-personal', this)"><span class="icon">👤</span>
+                Identity</div>
+            <div class="sidebar-link" onclick="goTo('section-branding', this)"><span class="icon">✨</span> Branding
+            </div>
+            <div class="sidebar-link" onclick="goTo('section-about', this)"><span class="icon">📝</span> About Page
+            </div>
+            <div class="sidebar-link" onclick="goTo('section-work', this)"><span class="icon">💼</span> Projects</div>
+            <div class="sidebar-link" onclick="goTo('section-media', this)"><span class="icon">🖼️</span> Global Media
+            </div>
+            <div class="sidebar-link" onclick="goTo('section-gallery', this)"><span class="icon">🎞️</span> Gallery (8
+                slots)</div>
+            <div class="sidebar-link" onclick="goTo('section-seo', this)"><span class="icon">🔍</span> SEO / Meta</div>
+
+            <div class="hint-box">
+                <strong>✅ How it works</strong><br><br>
+                1. Fill in your info<br>
+                2. Drop any photo/video into any slot<br>
+                3. Click <strong>📥 Download Config</strong><br>
+                4. Replace <code>portfolio-config.js</code><br>
+                5. Refresh <code>index.html</code> 🎉<br><br>
+                <strong>No renaming. No copying files.</strong><br>
+                Images are embedded directly.
+            </div>
+        </aside>
+
+        <!-- MAIN EDITOR -->
+        <main class="editor-main">
+
+            <!-- PERSONAL INFO -->
+            <div class="section-block" id="section-personal">
+                <h2>👤 Personal Information</h2>
+                <div class="field-row">
+                    <div class="field">
+                        <label>Display Name (Greek/Main)</label>
+                        <input type="text" id="name" placeholder="π.χ. Κωνσταντίνος" />
+                    </div>
+                    <div class="field">
+                        <label>English Name (for nav credit)</label>
+                        <input type="text" id="nameEn" placeholder="e.g. Konstantinos" />
+                    </div>
+                </div>
+                <div class="field-row">
+                    <div class="field">
+                        <label>Professional Role</label>
+                        <input type="text" id="role" placeholder="Freelance Web Developer" />
+                    </div>
+                    <div class="field">
+                        <label>Location</label>
+                        <input type="text" id="location" placeholder="The Netherlands" />
+                    </div>
+                </div>
+                <div class="field-row">
+                    <div class="field">
+                        <label>Email Address</label>
+                        <input type="email" id="email" placeholder="your@email.com" />
+                    </div>
+                    <div class="field">
+                        <label>Phone Number</label>
+                        <input type="text" id="phone" placeholder="+31 6 27 84 74 30" />
+                    </div>
+                </div>
+
+                <h3
+                    style="font-size: 13px; margin: 24px 0 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px;">
+                    Links & Socials</h3>
+                <div class="field-row">
+                    <div class="field">
+                        <label>Instagram URL</label>
+                        <input type="url" id="instagram" placeholder="https://instagram.com/..." />
+                    </div>
+                    <div class="field">
+                        <label>LinkedIn URL</label>
+                        <input type="url" id="linkedin" placeholder="https://linkedin.com/in/..." />
+                    </div>
+                </div>
+                <div class="field-row">
+                    <div class="field">
+                        <label>Twitter/X URL</label>
+                        <input type="url" id="twitter" placeholder="https://twitter.com/..." />
+                    </div>
+                    <div class="field">
+                        <label>GitHub URL</label>
+                        <input type="url" id="github" placeholder="https://github.com/..." />
+                    </div>
+                </div>
+            </div>
+
+            <!-- BRANDING -->
+            <div class="section-block" id="section-branding">
+                <h2>✨ Branding & Introduction</h2>
+                <div class="field-row single">
+                    <div class="field">
+                        <label>Main Tagline (Homepage Intro)</label>
+                        <textarea id="tagline" placeholder="Helping brands thrive in the digital world."></textarea>
+                    </div>
+                </div>
+                <div class="field-row single">
+                    <div class="field">
+                        <label>Short Bio (Homepage Description)</label>
+                        <textarea id="bio" placeholder="The combination of my passion for design..."></textarea>
+                    </div>
+                </div>
+
+                <h3
+                    style="font-size: 13px; margin: 24px 0 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px;">
+                    Business Details (Footer)</h3>
+                <div class="field-row">
+                    <div class="field">
+                        <label>Entity Name</label>
+                        <input type="text" id="businessName" placeholder="My Company" />
+                    </div>
+                    <div class="field">
+                        <label>CoC Number</label>
+                        <input type="text" id="businessCoc" placeholder="92411711" />
+                    </div>
+                </div>
+                <div class="field-row">
+                    <div class="field">
+                        <label>VAT Number</label>
+                        <input type="text" id="businessVat" placeholder="NL866034080B01" />
+                    </div>
+                    <div class="field">
+                        <label>Business Location</label>
+                        <input type="text" id="businessLocation" placeholder="The Netherlands" />
+                    </div>
+                </div>
+                <div class="field-row single">
+                    <div class="field">
+                        <label>Contact Section Title</label>
+                        <input type="text" id="contactTitle" placeholder="Let's start a project together" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- ABOUT PAGE -->
+            <div class="section-block" id="section-about">
+                <h2>📖 About Page Content</h2>
+                <div class="field-row single">
+                    <div class="field">
+                        <label>Hero Title (Main headline on About page)</label>
+                        <input type="text" id="aboutTitle" placeholder="Helping brands thrive in the digital world" />
+                    </div>
+                </div>
+                <div class="field-row single">
+                    <div class="field">
+                        <label>Description Paragraph</label>
+                        <textarea id="aboutDescription"
+                            placeholder="I help companies from all over the world with tailor-made solutions..."></textarea>
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <div class="field">
+                        <label>Service 1 Name</label>
+                        <input type="text" id="service1Title" placeholder="Design" />
+                    </div>
+                    <div class="field">
+                        <label>Service 2 Name</label>
+                        <input type="text" id="service2Title" placeholder="Development" />
+                    </div>
+                </div>
+                <div class="field-row">
+                    <div class="field">
+                        <label>Service 1 Description</label>
+                        <textarea id="service1Desc"
+                            placeholder="With a solid track record in designing websites..."></textarea>
+                    </div>
+                    <div class="field">
+                        <label>Service 2 Description</label>
+                        <textarea id="service2Desc" placeholder="I build scalable websites from scratch..."></textarea>
+                    </div>
+                </div>
+                <div class="field-row">
+                    <div class="field">
+                        <label>Service 3 Name</label>
+                        <input type="text" id="service3Title" placeholder="The Full Package" />
+                    </div>
+                    <div class="field">
+                        <label>Service 3 Description</label>
+                        <textarea id="service3Desc"
+                            placeholder="A complete website from concept to implementation..."></textarea>
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <div class="field">
+                        <label>Awards/Recognition Title</label>
+                        <input type="text" id="awardsTitle" placeholder="Awwwards judge '19-25" />
+                    </div>
+                    <div class="field">
+                        <label>Awards/Recognition Description</label>
+                        <textarea id="awardsDesc" placeholder="I am a proud member of the Awwwards jury..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PROJECTS -->
+            <div class="section-block" id="section-work">
+                <h2>💼 Work & Projects</h2>
+                <p style="font-size: 13px; color: var(--muted); margin-bottom: 24px;">
+                    Fill in the titles of the projects you want to feature. If a title is empty, the project card will
+                    not appear on the site.
+                </p>
+                <div id="projects-container">
+                    <!-- JS builds this -->
+                </div>
+            </div>
+
+            <!-- MEDIA -->
+            <div class="section-block" id="section-media">
+                <h2>🖼️ Global Media</h2>
+                <div class="field-row">
+                    <div class="field">
+                        <label>Hero Photo (Background image in homepage header)</label>
+                        <div class="dropzone" id="dz-hero" ondragover="dzOver(event,this)" ondragleave="dzLeave(this)"
+                            ondrop="dzDrop(event,this,'heroPhoto')">
+                            <input type="file" accept="image/*" onchange="dzFile(this,'dz-hero','heroPhoto')" />
+                            <div class="dz-icon">📸</div>
+                            <div class="dz-label"><strong>Drag & Drop</strong> large header image</div>
+                            <div class="dz-filename" id="dz-hero-name"></div>
+                            <button class="dz-clear" onclick="dzClear(event,'dz-hero','heroPhoto')">✕</button>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Profile Picture (Small circular photo in footer)</label>
+                        <div class="dropzone" id="dz-profile" ondragover="dzOver(event,this)"
+                            ondragleave="dzLeave(this)" ondrop="dzDrop(event,this,'profilePicture')">
+                            <input type="file" accept="image/*" onchange="dzFile(this,'dz-profile','profilePicture')" />
+                            <div class="dz-icon">🧔</div>
+                            <div class="dz-label"><strong>Drag & Drop</strong> profile avatar</div>
+                            <div class="dz-filename" id="dz-profile-name"></div>
+                            <button class="dz-clear" onclick="dzClear(event,'dz-profile','profilePicture')">✕</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="field-row" style="margin-top: 24px;">
+                    <div class="field">
+                        <label>About Page Photo (Large rectangular image on About page)</label>
+                        <div class="dropzone" id="dz-about" ondragover="dzOver(event,this)" ondragleave="dzLeave(this)"
+                            ondrop="dzDrop(event,this,'aboutPhoto')">
+                            <input type="file" accept="image/*" onchange="dzFile(this,'dz-about','aboutPhoto')" />
+                            <div class="dz-icon">🏢</div>
+                            <div class="dz-label"><strong>Drag & Drop</strong> about page image</div>
+                            <div class="dz-filename" id="dz-about-name"></div>
+                            <button class="dz-clear" onclick="dzClear(event,'dz-about','aboutPhoto')">✕</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- GALLERY -->
+            <div class="section-block" id="section-gallery">
+                <h2>🎞️ Home Gallery (8 Items)</h2>
+                <div class="gallery-grid" id="gallery-grid">
+                    <!-- JS builds 8 dropzones -->
+                </div>
+            </div>
+
+            <!-- SEO -->
+            <!-- SEO -->
+            <div class="section-block" id="section-seo">
+                <h2>🔍 SEO & Meta Tags</h2>
+                <div class="field-row">
+                    <div class="field">
+                        <label>SEO Title</label>
+                        <input type="text" id="metaTitle"
+                            placeholder="Dennis Snellenberg — Freelance Designer & Developer" />
+                    </div>
+                    <div class="field">
+                        <label>Canonical URL</label>
+                        <input type="url" id="canonicalUrl" placeholder="https://dennissnellenberg.com" />
+                    </div>
+                </div>
+                <div class="field-row single">
+                    <div class="field">
+                        <label>SEO Description</label>
+                        <textarea id="metaDescription"
+                            placeholder="Helping brands thrive in the digital world..."></textarea>
+                    </div>
+                </div>
+                <div class="field-row single">
+                    <div class="field">
+                        <label>Social Share Image (OG Image)</label>
+                        <div class="dropzone" id="dz-meta" ondragover="dzOver(event,this)" ondragleave="dzLeave(this)"
+                            ondrop="dzDrop(event,this,'metaImage')">
+                            <input type="file" accept="image/*" onchange="dzFile(this,'dz-meta','metaImage')" />
+                            <div class="dz-icon">🌐</div>
+                            <div class="dz-label"><strong>Drag & Drop</strong> 1200x630 share image</div>
+                            <div class="dz-filename" id="dz-meta-name"></div>
+                            <button class="dz-clear" onclick="dzClear(event,'dz-meta','metaImage')">✕</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- TOAST -->
+    <div id="toast">✅ Done!</div>
+
+    <!-- MODAL -->
+    <div id="modal-overlay">
+        <div id="modal-box">
+            <h3>📋 Your portfolio-config.js</h3>
+            <p>Copy this and replace the contents of <code>portfolio-config.js</code> in your project folder, or click
+                <strong>Download</strong>.
+            </p>
+            <textarea id="modal-code" readonly></textarea>
+            <div class="modal-actions">
+                <button class="btn-close-modal" onclick="closeModal()">Close</button>
+                <button class="btn-save" onclick="downloadConfig()">📥 Download Config File</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load the existing config so we don't start from scratch! -->
+    <script src="portfolio-config.js"></script>
+    <script>
+        function loadFromConfig() {
+            if (!window.PORTFOLIO_CONFIG) return;
+            const cfg = window.PORTFOLIO_CONFIG;
+
+            const setV = (id, val) => {
+                const el = document.getElementById(id);
+                if (el && val !== undefined) el.value = val;
+            };
+
+            setV('name', cfg.name);
+            setV('nameEn', cfg.nameEn);
+            setV('role', cfg.role);
+            setV('location', cfg.location);
+            setV('tagline', cfg.tagline);
+            setV('bio', cfg.bio);
+            setV('email', cfg.email);
+            setV('phone', cfg.phone);
+            setV('contactTitle', cfg.contactTitle);
+            setV('businessName', cfg.businessName);
+            setV('businessCoc', cfg.businessCoc);
+            setV('businessVat', cfg.businessVat);
+            setV('businessLocation', cfg.businessLocation);
+            setV('aboutTitle', cfg.aboutTitle);
+            setV('aboutDescription', cfg.aboutDescription);
+
+            if (cfg.services) {
+                setV('service1Title', cfg.services[0]?.title);
+                setV('service1Desc', cfg.services[0]?.desc);
+                setV('service2Title', cfg.services[1]?.title);
+                setV('service2Desc', cfg.services[1]?.desc);
+                setV('service3Title', cfg.services[2]?.title);
+                setV('service3Desc', cfg.services[2]?.desc);
+            }
+
+            setV('awardsTitle', cfg.awardsTitle);
+            setV('awardsDesc', cfg.awardsDesc);
+
+            if (cfg.socials) {
+                setV('instagram', cfg.socials.instagram);
+                setV('twitter', cfg.socials.twitter);
+                setV('linkedin', cfg.socials.linkedin);
+                setV('github', cfg.socials.github);
+            }
+
+            setV('metaTitle', cfg.metaTitle);
+            setV('metaDescription', cfg.metaDescription);
+            setV('canonicalUrl', cfg.canonicalUrl);
+
+            // Load Media
+            if (cfg.heroPhoto) {
+                store.heroPhoto = cfg.heroPhoto;
+                showPreview('dz-hero', store.heroPhoto, false, 'Loaded from config');
+            }
+            if (cfg.profilePicture) {
+                store.profilePicture = cfg.profilePicture;
+                showPreview('dz-profile', store.profilePicture, false, 'Loaded from config');
+            }
+            if (cfg.aboutPhoto) {
+                store.aboutPhoto = cfg.aboutPhoto;
+                showPreview('dz-about', store.aboutPhoto, false, 'Loaded from config');
+            }
+            if (cfg.metaImage) {
+                store.metaImage = cfg.metaImage;
+                showPreview('dz-meta', store.metaImage, false, 'Loaded from config');
+            }
+
+            if (cfg.gallery) {
+                cfg.gallery.forEach((item, idx) => {
+                    if (item && item.src && idx < 8) {
+                        store.gallery[idx] = { dataUrl: item.src, type: item.type };
+                        showPreview('dz-gallery-' + idx, item.src, item.type === 'video', 'Loaded from config');
+                    }
+                });
+            }
+
+            if (cfg.projects) {
+                cfg.projects.forEach((proj, idx) => {
+                    if (proj && idx < 12) {
+                        setV('proj-title-' + idx, proj.title);
+                        setV('proj-cat-' + idx, proj.category);
+                        setV('proj-year-' + idx, proj.year);
+                        setV('proj-url-' + idx, proj.url);
+                        if (proj.thumbnailBg) setV('proj-bg-' + idx, proj.thumbnailBg);
+                        if (proj.thumbnail) {
+                            store.projectThumbs[idx] = proj.thumbnail;
+                            showPreview('dz-proj-' + idx, proj.thumbnail, false, 'Loaded from config');
+                        }
+                    }
+                });
+            }
+        }
+        /* ═══════════════════════════════════════════════
+           STATE — base64 data URLs stored on drop.
+           These go DIRECTLY into portfolio-config.js.
+           No file paths. No copying. No renaming.
+           ═══════════════════════════════════════════════ */
+        const store = {
+            heroPhoto: null,
+            profilePicture: null,
+            aboutPhoto: null,
+            metaImage: null,
+            gallery: Array(8).fill(null),  // {dataUrl, type}
+            projectThumbs: Array(12).fill(null),  // dataUrl
+        };
+
+        /* ─── Sidebar navigation ─── */
+        function goTo(id, el) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+            document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        /* ─── Build gallery slots ─── */
+        (function () {
+            const grid = document.getElementById('gallery-grid');
+            const labels = [
+                'Row 1 · Slot 1', 'Row 1 · Slot 2 (video)',
+                'Row 1 · Slot 3', 'Row 1 · Slot 4 (video)',
+                'Row 2 · Slot 5 (video)', 'Row 2 · Slot 6',
+                'Row 2 · Slot 7 (video)', 'Row 2 · Slot 8'
+            ];
+            for (let i = 0; i < 8; i++) {
+                const wrap = document.createElement('div');
+                wrap.className = 'gallery-slot';
+                wrap.innerHTML = `
+                    <div class="dropzone" id="dz-gallery-${i}"
+                         ondragover="dzOver(event,this)" ondragleave="dzLeave(this)"
+                         ondrop="dzDropGallery(event,this,${i})">
+                        <input type="file" accept="image/*,video/*" onchange="dzFileGallery(this,${i})" />
+                        <div class="dz-icon">📁</div>
+                        <div class="dz-label" style="font-size:10.5px;">Drop image<br>or video</div>
+                        <div class="dz-filename" id="dz-gallery-${i}-name"></div>
+                        <button class="dz-clear" onclick="dzClearGallery(event,${i})">✕</button>
+                    </div>
+                    <div class="slot-label">${labels[i]}</div>`;
+                grid.appendChild(wrap);
+            }
+        })();
+
+        /* ─── Build project cards ─── */
+        (function () {
+            const container = document.getElementById('projects-container');
+            for (let i = 0; i < 12; i++) {
+                const card = document.createElement('div');
+                card.className = 'project-card';
+                card.innerHTML = `
+                    <div class="project-card-header">Project ${i + 1}</div>
+                    <div class="project-inner">
+                        <div>
+                            <div class="field" style="margin-bottom:8px;">
+                                <label>Thumbnail</label>
+                                <div class="dropzone" id="dz-proj-${i}" style="min-height:110px;"
+                                     ondragover="dzOver(event,this)" ondragleave="dzLeave(this)"
+                                     ondrop="dzDropProject(event,this,${i})">
+                                    <input type="file" accept="image/*" onchange="dzFileProject(this,${i})" />
+                                    <div class="dz-icon" style="font-size:20px;">🖼️</div>
+                                    <div class="dz-label" style="font-size:10px;">Drop image</div>
+                                    <div class="dz-filename" id="dz-proj-${i}-name" style="font-size:10px;"></div>
+                                    <button class="dz-clear" onclick="dzClearProject(event,${i})">✕</button>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label>Thumb BG Color</label>
+                                <input type="color" id="proj-bg-${i}" value="#F1F1F1" />
+                            </div>
+                        </div>
+                        <div>
+                            <div class="field">
+                                <label>Project Title</label>
+                                <input type="text" id="proj-title-${i}" placeholder="My Project" />
+                            </div>
+                            <div class="field">
+                                <label>Category</label>
+                                <input type="text" id="proj-cat-${i}" placeholder="Design &amp; Development" />
+                            </div>
+                            <div class="field">
+                                <label>Year</label>
+                                <input type="text" id="proj-year-${i}" placeholder="2025" />
+                            </div>
+                            <div class="field">
+                                <label>Link URL</label>
+                                <input type="url" id="proj-url-${i}" placeholder="https://..." />
+                            </div>
+                        </div>
+                    </div>`;
+                container.appendChild(card);
+            }
+        })();
+
+        /* ═══════════════════════════════════════════════
+           CORE — read File as base64 data URL
+           ═══════════════════════════════════════════════ */
+        function readFile(file) {
+            return new Promise(res => {
+                const r = new FileReader();
+                r.onload = e => res(e.target.result);
+                r.readAsDataURL(file);
+            });
+        }
+
+        /* ═══════════════════════════════════════════════
+           DROP-ZONE helpers
+           ═══════════════════════════════════════════════ */
+        function dzOver(e, el) { e.preventDefault(); el.classList.add('drag-over'); }
+        function dzLeave(el) { el.classList.remove('drag-over'); }
+
+        function showPreview(dzId, dataUrl, isVideo, filename) {
+            const dz = document.getElementById(dzId);
+            dz.classList.remove('drag-over');
+            dz.querySelectorAll('.dz-preview').forEach(p => p.remove());
+            if (isVideo) {
+                const v = document.createElement('video');
+                v.className = 'dz-preview'; v.src = dataUrl;
+                v.autoplay = true; v.loop = true; v.muted = true;
+                dz.appendChild(v);
+            } else {
+                const img = document.createElement('img');
+                img.className = 'dz-preview'; img.src = dataUrl;
+                dz.appendChild(img);
+            }
+            dz.classList.add('has-file');
+            const nm = document.getElementById(dzId + '-name');
+            if (nm) nm.textContent = '✓ ' + filename;
+        }
+
+        /* Single-slot (hero, profile, meta) */
+        async function dzFile(input, dzId, key) {
+            const file = input.files[0]; if (!file) return;
+            const isVideo = file.type.startsWith('video');
+            const url = await readFile(file);
+            store[key] = url;
+            showPreview(dzId, url, isVideo, file.name);
+            toast('✅ ' + file.name + ' embedded!');
+        }
+        async function dzDrop(e, dz, key) {
+            e.preventDefault(); dzLeave(dz);
+            const file = e.dataTransfer.files[0]; if (!file) return;
+            const url = await readFile(file);
+            store[key] = url;
+            showPreview(dz.id, url, file.type.startsWith('video'), file.name);
+            toast('✅ ' + file.name + ' embedded!');
+        }
+        function dzClear(e, dzId, key) {
+            e.stopPropagation();
+            store[key] = null;
+            const dz = document.getElementById(dzId);
+            dz.querySelectorAll('.dz-preview').forEach(p => p.remove());
+            dz.classList.remove('has-file');
+            const nm = document.getElementById(dzId + '-name');
+            if (nm) nm.textContent = '';
+        }
+
+        /* Gallery */
+        async function dzFileGallery(input, idx) {
+            const file = input.files[0]; if (!file) return;
+            const isVideo = file.type.startsWith('video');
+            const url = await readFile(file);
+            store.gallery[idx] = { dataUrl: url, type: isVideo ? 'video' : 'image' };
+            showPreview('dz-gallery-' + idx, url, isVideo, file.name);
+            toast('✅ Gallery slot ' + (idx + 1) + ': ' + file.name);
+        }
+        async function dzDropGallery(e, dz, idx) {
+            e.preventDefault(); dzLeave(dz);
+            const file = e.dataTransfer.files[0]; if (!file) return;
+            const isVideo = file.type.startsWith('video');
+            const url = await readFile(file);
+            store.gallery[idx] = { dataUrl: url, type: isVideo ? 'video' : 'image' };
+            showPreview('dz-gallery-' + idx, url, isVideo, file.name);
+            toast('✅ Gallery slot ' + (idx + 1) + ': ' + file.name);
+        }
+        function dzClearGallery(e, idx) {
+            e.stopPropagation();
+            store.gallery[idx] = null;
+            const dz = document.getElementById('dz-gallery-' + idx);
+            dz.querySelectorAll('.dz-preview').forEach(p => p.remove());
+            dz.classList.remove('has-file');
+            document.getElementById('dz-gallery-' + idx + '-name').textContent = '';
+        }
+
+        /* Projects */
+        async function dzFileProject(input, idx) {
+            const file = input.files[0]; if (!file) return;
+            const url = await readFile(file);
+            store.projectThumbs[idx] = url;
+            showPreview('dz-proj-' + idx, url, false, file.name);
+            toast('✅ Project ' + (idx + 1) + ': ' + file.name);
+        }
+        async function dzDropProject(e, dz, idx) {
+            e.preventDefault(); dzLeave(dz);
+            const file = e.dataTransfer.files[0]; if (!file) return;
+            const url = await readFile(file);
+            store.projectThumbs[idx] = url;
+            showPreview('dz-proj-' + idx, url, false, file.name);
+            toast('✅ Project ' + (idx + 1) + ': ' + file.name);
+        }
+        function dzClearProject(e, idx) {
+            e.stopPropagation();
+            store.projectThumbs[idx] = null;
+            const dz = document.getElementById('dz-proj-' + idx);
+            dz.querySelectorAll('.dz-preview').forEach(p => p.remove());
+            dz.classList.remove('has-file');
+            document.getElementById('dz-proj-' + idx + '-name').textContent = '';
+        }
+
+        /* ═══════════════════════════════════════════════
+           BUILD CONFIG
+           ═══════════════════════════════════════════════ */
+        function v(id) { return (document.getElementById(id)?.value || '').trim(); }
+
+        function buildConfig() {
+            const projects = [];
+            for (let i = 0; i < 12; i++) {
+                const title = v('proj-title-' + i);
+                if (!title) continue;
+                projects.push({
+                    title,
+                    category: v('proj-cat-' + i) || 'Development',
+                    year: v('proj-year-' + i) || '2025',
+                    url: v('proj-url-' + i) || '#',
+                    thumbnail: store.projectThumbs[i] || null,
+                    thumbnailBg: document.getElementById('proj-bg-' + i)?.value || '#F1F1F1',
+                });
+            }
+
+            const gallery = store.gallery
+                .map(item => item ? { type: item.type, src: item.dataUrl } : null)
+                .filter(Boolean);
+
+            return {
+                name: v('name') || 'Κωνσταντίνος',
+                nameEn: v('nameEn') || 'Konstantinos',
+                role: v('role') || 'Web Developer',
+                location: v('location') || 'Greece',
+                tagline: v('tagline'),
+                bio: v('bio'),
+
+                // Contact / Business
+                email: v('email'),
+                phone: v('phone'),
+                contactTitle: v('contactTitle') || "Let's start a project together",
+                businessName: v('businessName') || "My Company",
+                businessCoc: v('businessCoc') || "92411711",
+                businessVat: v('businessVat') || "NL866034080B01",
+                businessLocation: v('businessLocation') || "The Netherlands",
+
+                // About page
+                aboutTitle: v('aboutTitle'),
+                aboutDescription: v('aboutDescription'),
+                aboutPhoto: store.aboutPhoto || null,
+                services: [
+                    { title: v('service1Title'), desc: v('service1Desc') },
+                    { title: v('service2Title'), desc: v('service2Desc') },
+                    { title: v('service3Title'), desc: v('service3Desc') },
+                ],
+                awardsTitle: v('awardsTitle'),
+                awardsDesc: v('awardsDesc'),
+
+                socials: {
+                    instagram: v('instagram'),
+                    twitter: v('twitter'),
+                    linkedin: v('linkedin'),
+                    github: v('github'),
+                },
+                heroPhoto: store.heroPhoto || null,
+                profilePicture: store.profilePicture || null,
+                gallery,
+                projects,
+                metaTitle: v('metaTitle'),
+                metaDescription: v('metaDescription'),
+                metaImage: store.metaImage || null,
+                canonicalUrl: v('canonicalUrl'),
+            };
+        }
+
+        function makeJS(cfg) {
+            return `/**
+ * portfolio-config.js
+ * Generated: ${new Date().toLocaleString('el-GR')}
+ *
+ * ✅ All images & videos are EMBEDDED as base64.
+ *    Just replace this file and refresh index.html. Done!
+ */
+
+window.PORTFOLIO_CONFIG = ${JSON.stringify(cfg, null, 2)};
+`;
+        }
+
+        function makePreviewJS(cfg) {
+            // Create a truncated clone for the text area so the browser doesn't freeze
+            const previewCfg = JSON.parse(JSON.stringify(cfg, (key, value) => {
+                if (typeof value === 'string' && value.startsWith('data:')) {
+                    const ext = value.substring(0, 30);
+                    return ext + '... [BASE64 DATA TRUNCATED FOR PREVIEW. CLICK DOWNLOAD TO GET FULL FILE]';
+                }
+                return value;
+            }));
+
+            return `/**
+ * portfolio-config.js (PREVIEW)
+ * Generated: ${new Date().toLocaleString('el-GR')}
+ *
+ * ⚠️ THIS IS A PREVIEW ONLY. The base64 images are truncated here to prevent your browser from freezing.
+ * ✅ Click "Download Config File" to get the real working file with full images!
+ */
+
+window.PORTFOLIO_CONFIG = ${JSON.stringify(previewCfg, null, 2)};
+`;
+        }
+
+        /* ═══════════════════════════════════════════════
+           ACTIONS
+           ═══════════════════════════════════════════════ */
+        function generateAndShow() {
+            document.getElementById('modal-code').value = makePreviewJS(buildConfig());
+            document.getElementById('modal-overlay').classList.add('open');
+        }
+        function closeModal() {
+            document.getElementById('modal-overlay').classList.remove('open');
+        }
+        function downloadConfig() {
+            const blob = new Blob([makeJS(buildConfig())], { type: 'application/javascript' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'portfolio-config.js';
+            a.click();
+            toast('📥 Downloaded! Replace portfolio-config.js, refresh index.html 🎉');
+        }
+        function toast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
+
+        document.getElementById('modal-overlay').addEventListener('click', function (e) {
+            if (e.target === this) closeModal();
+        });
+
+        /* ═══════════════════════════════════════════════
+           LOCAL STORAGE & AUTO-SAVE (IndexedDB)
+           ═══════════════════════════════════════════════ */
+        const DB_NAME = 'PortfolioEditorDB';
+        const STORE_NAME = 'editorState';
+
+        function getDB() {
+            return new Promise((resolve, reject) => {
+                const req = indexedDB.open(DB_NAME, 1);
+                req.onupgradeneeded = e => {
+                    const db = e.target.result;
+                    if (!db.objectStoreNames.contains(STORE_NAME)) {
+                        db.createObjectStore(STORE_NAME);
+                    }
+                };
+                req.onsuccess = e => resolve(e.target.result);
+                req.onerror = e => reject(e);
+            });
+        }
+
+        window.previewLive = async function () {
+            console.log("🚀 Live Preview requested...");
+            try {
+                const cfg = buildConfig();
+
+                // 1. Try LocalStorage for small configs (fastest)
+                try {
+                    const json = JSON.stringify(cfg);
+                    localStorage.setItem('portfolio_preview', json);
+                    console.log("💾 Config saved to localStorage.");
+                } catch (quotaErr) {
+                    console.warn("⚠️ localStorage quota exceeded. Relying on IndexedDB.");
+                }
+
+                // 2. Always save to IndexedDB for robust large-data transfer
+                try {
+                    const db = await getDB();
+                    const tx = db.transaction(STORE_NAME, 'readwrite');
+                    // Save specifically for preview
+                    await new Promise((resolve, reject) => {
+                        const req = tx.objectStore(STORE_NAME).put(cfg, 'previewState');
+                        req.onsuccess = () => resolve();
+                        req.onerror = () => reject(req.error);
+                    });
+                    console.log("📦 Config saved to IndexedDB (previewState).");
+                } catch (dbErr) {
+                    console.error("❌ Failed to save to IndexedDB:", dbErr);
+                }
+
+                // 3. Open preview
+                const win = window.open('index.html', '_blank');
+                if (!win) {
+                    alert("⚠️ Popup Blocked! Please allow popups for this site to see the preview.");
+                } else {
+                    console.log("📂 Opening preview in new tab.");
+                    toast('👁️ Opening live preview...');
+                }
+            } catch (err) {
+                console.error("❌ Preview failed:", err);
+                alert("Preview Error: " + err.message);
+            }
+        };
+
+        async function saveStateToDB() {
+            try {
+                const statusEl = document.getElementById('save-status');
+                if (statusEl) statusEl.textContent = 'Auto-saving...';
+
+                const inputs = {};
+                document.querySelectorAll('input, textarea, select').forEach(el => {
+                    if (el.id && el.type !== 'file' && el.type !== 'submit') {
+                        if (el.type === 'checkbox') inputs[el.id] = el.checked;
+                        else inputs[el.id] = el.value;
+                    }
+                });
+                const state = { inputs, store };
+                const db = await getDB();
+                const tx = db.transaction(STORE_NAME, 'readwrite');
+                tx.objectStore(STORE_NAME).put(state, 'currentState');
+
+                if (statusEl) {
+                    setTimeout(() => {
+                        statusEl.textContent = 'All changes saved locally';
+                    }, 500);
+                }
+            } catch (err) {
+                console.warn('Auto-save skipped/failed:', err);
+            }
+        }
+
+        async function loadStateFromDB() {
+            try {
+                const db = await getDB();
+                const tx = db.transaction(STORE_NAME, 'readonly');
+                const req = tx.objectStore(STORE_NAME).get('currentState');
+
+                req.onsuccess = () => {
+                    const state = req.result;
+                    if (!state) return; // No previous state
+
+                    let restoredItems = 0;
+                    // Restore inputs
+                    if (state.inputs) {
+                        for (const id in state.inputs) {
+                            const el = document.getElementById(id);
+                            if (el && el.type !== 'file' && el.type !== 'submit') {
+                                if (el.type === 'checkbox') el.checked = state.inputs[id];
+                                else el.value = state.inputs[id];
+                                restoredItems++;
+                            }
+                        }
+                    }
+
+                    // Restore store (Base64 media)
+                    if (state.store) {
+                        Object.assign(store, state.store);
+
+                        // Re-render previews
+                        if (store.heroPhoto) { showPreview('dz-hero', store.heroPhoto, false, 'Saved image'); restoredItems++; }
+                        if (store.profilePicture) { showPreview('dz-profile', store.profilePicture, false, 'Saved image'); restoredItems++; }
+                        if (store.aboutPhoto) { showPreview('dz-about', store.aboutPhoto, false, 'Saved image'); restoredItems++; }
+                        if (store.metaImage) { showPreview('dz-meta', store.metaImage, false, 'Saved image'); restoredItems++; }
+
+                        if (store.gallery) {
+                            store.gallery.forEach((item, idx) => {
+                                if (item) { showPreview('dz-gallery-' + idx, item.dataUrl, item.type === 'video', 'Saved media'); restoredItems++; }
+                            });
+                        }
+                        if (store.projectThumbs) {
+                            store.projectThumbs.forEach((thumb, idx) => {
+                                if (thumb) { showPreview('dz-proj-' + idx, thumb, false, 'Saved image'); restoredItems++; }
+                            });
+                        }
+                    }
+
+                    if (restoredItems > 0) {
+                        toast('✅ Previous editor session restored!');
+                    }
+                };
+            } catch (err) {
+                console.warn('Failed to load state:', err);
+            }
+        }
+
+        // Initialize Auto-Save on Startup
+        window.addEventListener('load', () => {
+            loadFromConfig(); // always base it on portfolio-config.js first
+            loadStateFromDB().finally(() => {
+                // Auto save every 2 seconds
+                setInterval(saveStateToDB, 2000);
+            });
+        });
+        console.log("✅ Editor functions initialized.");
+    </script>
+</body>
+
+</html>

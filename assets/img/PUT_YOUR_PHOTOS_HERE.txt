@@ -1,0 +1,18 @@
+PUT YOUR IMAGES IN THIS FOLDER
+================================
+
+Drag and drop your photos/images here:
+
+- me.jpg           → your hero background photo (the big one in the header)
+- profile.jpg      → your profile circle photo (shown in the footer)
+- meta.jpg         → the image shown when you share your site on social media
+- project-1.jpg    → thumbnail for Project 1
+- project-2.jpg    → thumbnail for Project 2
+- project-3.jpg    → thumbnail for Project 3
+- project-4.jpg    → thumbnail for Project 4
+- gallery-1.jpg    → horizontal scroll gallery item 1
+- gallery-3.jpg    → horizontal scroll gallery item 3
+- gallery-6.jpg    → horizontal scroll gallery item 6
+- gallery-8.jpg    → horizontal scroll gallery item 8
+
+After adding your files, refresh index.html in your browser!

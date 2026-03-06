@@ -1,742 +1,1005 @@
 <!DOCTYPE html>
-<html lang="el">
+<!--  This site was created by Dennis Snellenberg (Code by Dennis)  -->
+<html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ντένις Σνέλενμπεργκ • Ελεύθερος Επαγγελματίας Σχεδιαστής & Προγραμματιστής</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #1C1D20;
-      --text: #FFFFFF;
-      --sec-text: #999999;
-    }
-    body, html {
-      margin: 0;
-      padding: 0;
-      background-color: var(--bg);
-      color: var(--text);
-      font-family: 'Inter', sans-serif;
-      cursor: none;
-      overflow-x: hidden;
-    }
-    a { color: inherit; text-decoration: none; cursor: none; }
-    ul { list-style: none; padding: 0; margin: 0; }
-    
-    /* Custom Cursor */
-    .cursor {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 12px;
-      height: 12px;
-      background-color: #fff;
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9999;
-      transform: translate(-50%, -50%);
-      transition: width 0.3s, height 0.3s, background-color 0.3s;
-      mix-blend-mode: difference;
-    }
-    .cursor.active {
-      width: 60px;
-      height: 60px;
-      background-color: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(2px);
-    }
-
-    /* Layout */
-    .container {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 0 5vw;
-    }
-    
-    /* Header */
-    header {
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      padding-bottom: 10vh;
-      position: relative;
-    }
-    .nav-bar {
-      position: absolute;
-      top: 2rem;
-      left: 5vw;
-      right: 5vw;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 100;
-    }
-    .nav-links {
-      display: flex;
-      gap: 2rem;
-    }
-    .magnetic {
-      display: inline-block;
-      padding: 10px;
-    }
-    
-    /* Hero */
-    .personal-image {
-      position: absolute;
-      top: 15vh;
-      right: 15vw;
-      width: 30vw;
-      max-width: 400px;
-      height: 50vh;
-      overflow: hidden;
-      z-index: -1;
-      opacity: 0.8;
-    }
-    .personal-image img {
-      width: 100%;
-      height: 120%; /* Extra height for parallax */
-      object-fit: cover;
-      transform: translateY(-10%); /* Initial offset */
-    }
-
-    .hero-location {
-      position: absolute;
-      left: 5vw;
-      top: 30vh;
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-    .hero-location p {
-      max-width: 150px;
-      font-size: 1.2rem;
-      line-height: 1.4;
-    }
-    .globe {
-      width: 60px;
-      height: 60px;
-      border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 50%;
-      position: relative;
-      animation: spin 10s linear infinite;
-    }
-    .globe::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 0;
-      width: 100%;
-      height: 1px;
-      background: rgba(255,255,255,0.2);
-    }
-    .globe::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 50%;
-      width: 1px;
-      height: 100%;
-      background: rgba(255,255,255,0.2);
-    }
-    @keyframes spin { 100% { transform: rotate(360deg); } }
-    
-    .scroll-badge {
-      position: absolute;
-      bottom: 10vh;
-      right: 5vw;
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      animation: spin 10s linear infinite;
-      z-index: 10;
-    }
-    .scroll-badge svg {
-      width: 100%;
-      height: 100%;
-    }
-    .scroll-badge-text {
-      font-size: 13px;
-      letter-spacing: 3px;
-      fill: #fff;
-      text-transform: uppercase;
-    }
-    .scroll-badge-arrow {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 24px;
-      /* Counter-rotate the arrow so it stays upright */
-      animation: counter-spin 10s linear infinite;
-    }
-    @keyframes counter-spin { 100% { transform: translate(-50%, -50%) rotate(-360deg); } }
-
-    .hero-subtitle {
-      font-size: 1.5rem;
-      margin-bottom: 2rem;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    .hero-title {
-      font-size: 11vw;
-      font-weight: 500;
-      line-height: 1;
-      margin: 0;
-      letter-spacing: -0.05em;
-      white-space: nowrap;
-      will-change: transform;
-    }
-    .reveal-text {
-      overflow: hidden;
-      display: inline-block;
-    }
-    .reveal-text span {
-      display: inline-block;
-      opacity: 1;
-      transform: translateY(0);
-    }
-    
-    /* Intro */
-    .intro {
-      padding: 15vh 0;
-      display: flex;
-      justify-content: space-between;
-      gap: 5rem;
-    }
-    .intro h4 {
-      font-size: 2.5rem;
-      font-weight: 400;
-      line-height: 1.4;
-      max-width: 800px;
-      margin: 0;
-    }
-    .intro-desc {
-      max-width: 300px;
-      color: var(--sec-text);
-      font-size: 1.1rem;
-      line-height: 1.6;
-    }
-    .btn-round {
-      width: 150px;
-      height: 150px;
-      border-radius: 50%;
-      background: #1C1D20;
-      border: 1px solid rgba(255,255,255,0.2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-top: 2rem;
-      transition: background 0.3s;
-      position: relative;
-      overflow: hidden;
-    }
-    .btn-round::after {
-      content: '';
-      position: absolute;
-      top: 100%;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: #fff;
-      border-radius: 50%;
-      transition: top 0.4s ease;
-      z-index: 0;
-    }
-    .btn-round:hover::after {
-      top: 0;
-      border-radius: 0;
-    }
-    .btn-round span {
-      position: relative;
-      z-index: 1;
-      transition: color 0.3s;
-    }
-    .btn-round:hover span {
-      color: #000;
-    }
-
-    /* Work */
-    .work {
-      padding: 10vh 0;
-    }
-    .work-title {
-      color: var(--sec-text);
-      text-transform: uppercase;
-      font-size: 0.9rem;
-      letter-spacing: 0.1em;
-      margin-bottom: 3rem;
-    }
-    .work-list {
-      position: relative;
-    }
-    .stripe {
-      width: 0%;
-      height: 1px;
-      background-color: rgba(255, 255, 255, 0.2);
-      margin: 0;
-    }
-    .work-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 3rem 0;
-      position: relative;
-      z-index: 2;
-      transition: opacity 0.3s;
-    }
-    .work-item:hover {
-      opacity: 0.5;
-    }
-    .work-item h2 {
-      font-size: 4vw;
-      margin: 0;
-      font-weight: 400;
-      transition: transform 0.3s;
-    }
-    .work-item p {
-      margin: 0;
-      transition: transform 0.3s;
-    }
-    .work-item:hover h2 {
-      transform: translateX(20px);
-    }
-    .work-item:hover p {
-      transform: translateX(-20px);
-    }
-    
-    /* Parallax Image Hover */
-    .hover-image-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 350px;
-      height: 350px;
-      pointer-events: none;
-      z-index: 10;
-      opacity: 0;
-      transform: scale(0.8);
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .hover-image-inner {
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      top: 0;
-      left: 0;
-      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .hover-image {
-      width: 100%;
-      height: 100%;
-      background-size: cover;
-      background-position: center;
-      position: absolute;
-      top: 0;
-      left: 0;
-      opacity: 0;
-    }
-    .hover-image.active {
-      opacity: 1;
-    }
-    
-    /* Footer */
-    footer {
-      padding: 15vh 0 5vh;
-      text-align: center;
-      position: relative;
-    }
-    .footer-title {
-      font-size: 8vw;
-      font-weight: 500;
-      line-height: 1;
-      margin-bottom: 5vh;
-      letter-spacing: -0.05em;
-    }
-    .footer-title img {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      vertical-align: middle;
-      margin-right: 20px;
-      object-fit: cover;
-    }
-    .footer-bottom {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 10vh;
-      text-align: left;
-      border-top: 1px solid rgba(255,255,255,0.1);
-      padding-top: 2rem;
-    }
-    .footer-col h5 {
-      color: var(--sec-text);
-      text-transform: uppercase;
-      font-size: 0.8rem;
-      letter-spacing: 0.1em;
-      margin-bottom: 1rem;
-    }
-    .footer-col p, .footer-col a {
-      margin: 0.5rem 0;
-      display: block;
-    }
-    .btn-normal {
-      display: inline-block;
-      padding: 1rem 2rem;
-      border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 50px;
-      margin: 0.5rem;
-      transition: background 0.3s, color 0.3s;
-    }
-    .btn-normal:hover {
-      background: #fff;
-      color: #000;
-    }
-  </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Dennis Snellenberg • Freelance Designer &amp; Developer</title>
+  <meta name="description"
+    content="Helping brands thrive in the digital world. Located in The Netherlands. Delivering tailor-made digital designs and building interactive websites from scratch. © Code by Dennis" />
+  <meta property="og:title" content="Dennis Snellenberg • Freelance Designer &amp; Developer" />
+  <meta property="og:description"
+    content="Helping brands thrive in the digital world. Located in The Netherlands. Delivering tailor-made digital designs and building interactive websites from scratch. © Code by Dennis" />
+  <meta property="og:image"
+    content="https://dennissnellenberg.com/media/site/89d468b455-1646837228/meta-image-dennis-snellenberg-860x540-crop-q72.jpg" />
+  <meta property="og:site_name" content="Dennis Snellenberg" />
+  <meta property="og:locale" content="en" />
+  <meta property="og:type" content="website" />
+  <meta property="twitter:title" content="Dennis Snellenberg • Freelance Designer &amp; Developer" />
+  <meta property="twitter:description"
+    content="Helping brands thrive in the digital world. Located in The Netherlands. Delivering tailor-made digital designs and building interactive websites from scratch. © Code by Dennis" />
+  <meta property="twitter:image"
+    content="https://dennissnellenberg.com/media/site/89d468b455-1646837228/meta-image-dennis-snellenberg-860x540-crop-q72.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="google" content="notranslate" />
+  <meta property="og:locale" content="en" />
+  <link rel="canonical" href="https://dennissnellenberg.com" />
+  <link rel="preload" as="font" href="https://dennissnellenberg.com/assets/fonts/NeueMontreal-Regular.otf"
+    type="font/otf" crossorigin="anonymous" />
+  <link href="https://dennissnellenberg.com/assets/css/normalize.css" rel="stylesheet" />
+  <link href="https://dennissnellenberg.com/assets/css/locomotive-scroll.css" rel="stylesheet" />
+  <link href="https://dennissnellenberg.com/assets/css/styleguide.css" rel="stylesheet" />
+  <link href="https://dennissnellenberg.com/assets/css/components.css" rel="stylesheet" />
+  <link href="https://dennissnellenberg.com/assets/css/style-new.css" rel="stylesheet" />
 </head>
-<body>
 
-  <!-- Custom Cursor -->
-  <div class="cursor"></div>
-
-  <!-- Hover Image Container -->
-  <div class="hover-image-container">
-    <div class="hover-image-inner">
-      <div class="hover-image" style="background-image: url('https://dennissnellenberg.com/media/pages/work/twice/0ab7e43954-1710404752/thumbnail-twice-810x810-crop-q72.jpg');" data-index="0"></div>
-      <div class="hover-image" style="background-image: url('https://dennissnellenberg.com/media/pages/work/the-damai/b511d32d21-1710452224/thumbnail-thedamai-v2-810x810-crop-q72.jpg');" data-index="1"></div>
-      <div class="hover-image" style="background-image: url('https://dennissnellenberg.com/media/pages/work/fabric/ac07564a5f-1688453092/thumbnail-fabric-darkgray-810x810-crop-q72.jpg');" data-index="2"></div>
-      <div class="hover-image" style="background-image: url('https://dennissnellenberg.com/media/pages/work/aanstekelijk/441187fb44-1687423090/thumbnail-aanstekelijk-810x810-crop-q72.jpg');" data-index="3"></div>
+<body data-barba="wrapper">
+  <div class="no-scroll-overlay">
+  </div>
+  <div class="loading-container">
+    <div class="loading-screen">
+      <div class="rounded-div-wrap top">
+        <div class="rounded-div">
+        </div>
+      </div>
+      <div class="loading-words">
+        <h2 class="home-active home-active-first">
+          Hello
+          <div class="dot">
+          </div>
+        </h2>
+        <h2 class="home-active">
+          Bonjour
+          <div class="dot">
+          </div>
+        </h2>
+        <h2 class="home-active">
+          स्वागत हे
+          <div class="dot">
+          </div>
+        </h2>
+        <h2 class="home-active">
+          Ciao
+          <div class="dot">
+          </div>
+        </h2>
+        <h2 class="home-active">
+          Olá
+          <div class="dot">
+          </div>
+        </h2>
+        <h2 class="home-active jap">
+          おい
+          <div class="dot">
+          </div>
+        </h2>
+        <h2 class="home-active">
+          Hallå
+          <div class="dot">
+          </div>
+        </h2>
+        <h2 class="home-active">
+          Guten tag
+          <div class="dot">
+          </div>
+        </h2>
+        <h2 class="home-active-last">
+          Hallo
+          <div class="dot">
+          </div>
+        </h2>
+        <h2 class="active">
+          Home
+          <div class="dot">
+          </div>
+        </h2>
+        <h2>
+          Work
+          <div class="dot">
+          </div>
+        </h2>
+        <h2>
+          TWICE
+          <div class="dot">
+          </div>
+        </h2>
+        <h2>
+          The Damai
+          <div class="dot">
+          </div>
+        </h2>
+        <h2>
+          FABRIC™
+          <div class="dot">
+          </div>
+        </h2>
+        <h2>
+          Aanstekelijk
+          <div class="dot">
+          </div>
+        </h2>
+        <h2>
+          Base Create
+          <div class="dot">
+          </div>
+        </h2>
+        <h2>
+          AVVR
+          <div class="dot">
+          </div>
+        </h2>
+        <h2>
+          GraphicHunters
+          <div class="dot">
+          </div>
+        </h2>
+        <h2>
+          Future Goals
+          <div class="dot">
+          </div>
+        </h2>
+        <h2>
+          Atypikal
+          <div class="dot">
+          </div>
+        </h2>
+        <h2>
+          One:Nil
+          <div class="dot">
+          </div>
+        </h2>
+        <h2>
+          Andy Hardy
+          <div class="dot">
+          </div>
+        </h2>
+        <h2>
+          About
+          <div class="dot">
+          </div>
+        </h2>
+        <h2>
+          Contact
+          <div class="dot">
+          </div>
+        </h2>
+        <h2>
+          Success
+          <div class="dot">
+          </div>
+        </h2>
+        <h2>
+          Archive
+          <div class="dot">
+          </div>
+        </h2>
+        <h2>
+          Error
+          <div class="dot">
+          </div>
+        </h2>
+        <h2>
+          Styleguide
+          <div class="dot">
+          </div>
+        </h2>
+      </div>
+      <div class="rounded-div-wrap bottom">
+        <div class="rounded-div">
+        </div>
+      </div>
     </div>
   </div>
-
-  <div class="nav-bar">
-    <div class="magnetic">© Κώδικας από τον Ντένις Σνέλενμπεργκ</div>
-    <div class="nav-links">
-      <a href="#" class="magnetic">Δουλειά</a>
-      <a href="#" class="magnetic">Σχετικά</a>
-      <a href="#" class="magnetic">Επικοινωνία</a>
-      <a href="#" class="magnetic">Μενού</a>
+  <main class="main" id="home" data-barba="container" data-barba-namespace="home">
+    <div class="mouse-pos-list-image no-select">
+      <div class="mouse-pos-list-image-bounce overlay">
+        <div class="float-image-wrap">
+          <li class="mouse-pos-list-image-inner development interaction visible">
+            <div class="overlay overlay-image lazy"
+              style="background-color: #F1F1F1; background-position: center center; background-repeat: no-repeat; background-size: cover;"
+              data-bg="https://dennissnellenberg.com/media/pages/work/twice/0ab7e43954-1710404752/thumbnail-twice-810x810-crop-q72.jpg">
+            </div>
+          </li>
+          <li class="mouse-pos-list-image-inner design development interaction visible">
+            <div class="overlay overlay-image lazy"
+              style="background-color: #E0D9D1; background-position: center center; background-repeat: no-repeat; background-size: cover;"
+              data-bg="https://dennissnellenberg.com/media/pages/work/the-damai/b511d32d21-1710452224/thumbnail-thedamai-v2-810x810-crop-q72.jpg">
+            </div>
+          </li>
+          <li class="mouse-pos-list-image-inner design development interaction visible">
+            <div class="overlay overlay-image lazy"
+              style="background-color: #48494A; background-position: center center; background-repeat: no-repeat; background-size: cover;"
+              data-bg="https://dennissnellenberg.com/media/pages/work/fabric/ac07564a5f-1688453092/thumbnail-fabric-darkgray-810x810-crop-q72.jpg">
+            </div>
+          </li>
+          <li class="mouse-pos-list-image-inner design development interaction visible">
+            <div class="overlay overlay-image lazy"
+              style="background-color: #101010; background-position: center center; background-repeat: no-repeat; background-size: cover;"
+              data-bg="https://dennissnellenberg.com/media/pages/work/aanstekelijk/441187fb44-1687423090/thumbnail-aanstekelijk-810x810-crop-q72.jpg">
+            </div>
+          </li>
+        </div>
+      </div>
     </div>
-  </div>
-
-  <div class="container">
-    <header>
-      <div class="personal-image">
-        <img src="https://dennissnellenberg.com/assets/img/DSC07033.jpg" alt="Dennis Snellenberg">
-      </div>
-      
-      <div class="hero-location">
-        <p>Βρίσκεται στην Ολλανδία</p>
-        <div class="globe"></div>
-      </div>
-      
-      <div class="scroll-badge">
-        <svg viewBox="0 0 100 100">
-          <path id="circlePath" d="M 50, 50 m -40, 0 a 40,40 0 1,1 80,0 a 40,40 0 1,1 -80,0" fill="none" />
-          <text>
-            <textPath href="#circlePath" class="scroll-badge-text">
-              ΚΑΝΤΕ SCROLL • ΚΑΝΤΕ SCROLL • 
-            </textPath>
-          </text>
-        </svg>
-        <div class="scroll-badge-arrow">↓</div>
-      </div>
-
-      <div class="hero-subtitle reveal-text">
-        <span>↗ Ελεύθερος Επαγγελματίας Σχεδιαστής & Προγραμματιστής</span>
-      </div>
-      <h1 class="hero-title reveal-text">
-        <span>Ντένις Σνέλενμπεργκ —</span>
-      </h1>
-    </header>
-
-    <section class="intro">
-      <h4>
-        Βοηθάω τα brands να ξεχωρίσουν στην ψηφιακή εποχή. Μαζί θα θέσουμε το νέο status quo. Χωρίς ανοησίες, πάντα στην αιχμή της τεχνολογίας.
-      </h4>
-      <div>
-        <p class="intro-desc">
-          Ο συνδυασμός του πάθους μου για το σχεδιασμό, τον κώδικα και την αλληλεπίδραση με τοποθετεί σε μια μοναδική θέση στον κόσμο του web design.
-        </p>
-        <a href="#" class="btn-round magnetic">
-          <span>Σχετικά με μένα</span>
-        </a>
-      </div>
-    </section>
-
-    <section class="work">
-      <div class="work-title">Πρόσφατη δουλειά</div>
-      <div class="work-list">
-        <div class="stripe"></div>
-        <div class="work-item" data-index="0">
-          <h2>TWICE</h2>
-          <p>Αλληλεπίδραση & Ανάπτυξη</p>
+    <div class="mouse-pos-list-btn no-select">
+    </div>
+    <div class="mouse-pos-list-span no-select">
+      <p>
+        View
+      </p>
+    </div>
+    <div class="btn btn-hamburger">
+      <div class="btn-click magnetic" data-strength="50" data-strength-text="25">
+        <div class="btn-fill">
         </div>
-        <div class="stripe"></div>
-        <div class="work-item" data-index="1">
-          <h2>The Damai</h2>
-          <p>Σχεδιασμός & Ανάπτυξη</p>
-        </div>
-        <div class="stripe"></div>
-        <div class="work-item" data-index="2">
-          <h2>FABRIC™</h2>
-          <p>Σχεδιασμός & Ανάπτυξη</p>
-        </div>
-        <div class="stripe"></div>
-        <div class="work-item" data-index="3">
-          <h2>Aanstekelijk</h2>
-          <p>Σχεδιασμός & Ανάπτυξη</p>
-        </div>
-        <div class="stripe"></div>
-      </div>
-      <div style="text-align: center; margin-top: 5rem;">
-        <a href="#" class="btn-normal magnetic">Περισσότερη δουλειά</a>
-      </div>
-    </section>
-
-    <footer>
-      <h2 class="footer-title">
-        <img src="https://dennissnellenberg.com/assets/img/DSC07033.jpg" alt="Dennis">
-        Ας δουλέψουμε μαζί
-      </h2>
-      <div style="text-align: left;">
-        <a href="mailto:info@dennissnellenberg.com" class="btn-normal magnetic">info@dennissnellenberg.com</a>
-        <a href="tel:+31627847430" class="btn-normal magnetic">+31 6 27 84 74 30</a>
-      </div>
-      
-      <div class="footer-bottom">
-        <div class="footer-col">
-          <h5>Έκδοση</h5>
-          <p>2024 © Edition</p>
-        </div>
-        <div class="footer-col">
-          <h5>Τοπική ώρα</h5>
-          <p id="local-time">00:00 PM CET</p>
-        </div>
-        <div class="footer-col">
-          <h5>Κοινωνικά Δίκτυα</h5>
-          <a href="#" class="magnetic">Awwwards</a>
-          <a href="#" class="magnetic">Instagram</a>
-          <a href="#" class="magnetic">Twitter</a>
-          <a href="#" class="magnetic">LinkedIn</a>
+        <div class="btn-text">
+          <div class="btn-bars">
+          </div>
+          <span class="btn-text-inner">Menu</span>
         </div>
       </div>
-    </footer>
-  </div>
-
-  <!-- Scripts -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
-  <script>
-    // Register ScrollTrigger
-    gsap.registerPlugin(ScrollTrigger);
-
-    // Initialize Lenis for smooth scrolling
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      direction: 'vertical',
-      gestureDirection: 'vertical',
-      smooth: true,
-      mouseMultiplier: 1,
-      smoothTouch: false,
-      touchMultiplier: 2,
-      infinite: false,
-    });
-
-    // Tie Lenis with GSAP ScrollTrigger
-    lenis.on('scroll', ScrollTrigger.update);
-    
-    gsap.ticker.add((time) => {
-      lenis.raf(time * 1000);
-    });
-    
-    gsap.ticker.lagSmoothing(0, 0);
-
-    // Custom Cursor
-    const cursor = document.querySelector('.cursor');
-    const hoverElements = document.querySelectorAll('a, .magnetic, .work-item');
-    
-    let mouseX = 0;
-    let mouseY = 0;
-    let cursorX = 0;
-    let cursorY = 0;
-
-    window.addEventListener('mousemove', (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-    });
-
-    gsap.ticker.add(() => {
-      cursorX += (mouseX - cursorX) * 0.2;
-      cursorY += (mouseY - cursorY) * 0.2;
-      cursor.style.transform = `translate(${cursorX}px, ${cursorY}px)`;
-    });
-
-    hoverElements.forEach(el => {
-      el.addEventListener('mouseenter', () => cursor.classList.add('active'));
-      el.addEventListener('mouseleave', () => cursor.classList.remove('active'));
-    });
-
-    // Magnetic Buttons
-    const magnetics = document.querySelectorAll('.magnetic');
-    magnetics.forEach(btn => {
-      btn.addEventListener('mousemove', (e) => {
-        const rect = btn.getBoundingClientRect();
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
-        
-        gsap.to(btn, {
-          x: x * 0.4,
-          y: y * 0.4,
-          duration: 0.5,
-          ease: 'power2.out'
-        });
-      });
-      
-      btn.addEventListener('mouseleave', () => {
-        gsap.to(btn, {
-          x: 0,
-          y: 0,
-          duration: 0.5,
-          ease: 'power2.out'
-        });
-      });
-    });
-
-    // Text Reveal Animation (Runs immediately)
-    gsap.from('.reveal-text span', {
-      y: '100%',
-      duration: 1,
-      stagger: 0.1,
-      ease: 'power4.out',
-      delay: 0.2
-    });
-
-    // 1. Hero Text Horizontal Scroll
-    gsap.to('.hero-title', {
-      xPercent: -30,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: 'header',
-        start: 'top top',
-        end: 'bottom top',
-        scrub: true
-      }
-    });
-
-    // 2. Hero Image Parallax
-    gsap.to('.personal-image img', {
-      yPercent: 20,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: 'header',
-        start: 'top top',
-        end: 'bottom top',
-        scrub: true
-      }
-    });
-
-    // 4. Stripe Animations
-    const stripes = document.querySelectorAll('.stripe');
-    stripes.forEach(stripe => {
-      gsap.to(stripe, {
-        width: '100%',
-        duration: 1.2,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: stripe,
-          start: 'top 90%',
-        }
-      });
-    });
-
-    // Parallax Image Hover for Work Items
-    const workItems = document.querySelectorAll('.work-item');
-    const hoverContainer = document.querySelector('.hover-image-container');
-    const hoverImages = document.querySelectorAll('.hover-image');
-    const hoverInner = document.querySelector('.hover-image-inner');
-    
-    let hoverX = 0;
-    let hoverY = 0;
-
-    workItems.forEach(item => {
-      item.addEventListener('mouseenter', (e) => {
-        const index = item.getAttribute('data-index');
-        hoverImages.forEach(img => img.classList.remove('active'));
-        if(hoverImages[index]) {
-          hoverImages[index].classList.add('active');
-        }
-        
-        gsap.to(hoverContainer, {
-          opacity: 1,
-          scale: 1,
-          duration: 0.4,
-          ease: 'power2.out'
-        });
-      });
-      
-      item.addEventListener('mousemove', (e) => {
-        hoverX += (e.clientX - hoverX) * 0.1;
-        hoverY += (e.clientY - hoverY) * 0.1;
-        
-        gsap.to(hoverContainer, {
-          x: e.clientX - 175,
-          y: e.clientY - 175,
-          duration: 0.5,
-          ease: 'power2.out'
-        });
-        
-        // Inner image subtle parallax
-        const rect = item.getBoundingClientRect();
-        const relX = e.clientX - rect.left;
-        const relY = e.clientY - rect.top;
-        
-        gsap.to(hoverInner, {
-          x: (relX - rect.width/2) * 0.2,
-          y: (relY - rect.height/2) * 0.2,
-          duration: 0.5,
-          ease: 'power2.out'
-        });
-      });
-      
-      item.addEventListener('mouseleave', () => {
-        gsap.to(hoverContainer, {
-          opacity: 0,
-          scale: 0.8,
-          duration: 0.4,
-          ease: 'power2.out'
-        });
-        gsap.to(hoverInner, {
-          x: 0,
-          y: 0,
-          duration: 0.5,
-          ease: 'power2.out'
-        });
-      });
-    });
-
-    // Local Time
-    function updateTime() {
-      const now = new Date();
-      const timeString = now.toLocaleTimeString('el-GR', { 
-        hour: '2-digit', 
-        minute: '2-digit',
-        timeZone: 'Europe/Athens'
-      }) + ' EET';
-      const timeEl = document.getElementById('local-time');
-      if(timeEl) timeEl.textContent = timeString;
-    }
-    setInterval(updateTime, 1000);
-    updateTime();
-
+    </div>
+    <div class="overlay fixed-nav-back">
+    </div>
+    <div class="fixed-nav theme-dark">
+      <div class="fixed-nav-rounded-div">
+        <div class="rounded-div-wrap">
+          <div class="rounded-div">
+          </div>
+        </div>
+      </div>
+      <div class="fixed-nav-inner">
+        <div class="row nav-row">
+          <h5>
+            Navigation
+          </h5>
+          <div class="stripe">
+          </div>
+          <ul class="links-wrap">
+            <li class="btn btn-link active">
+              <a href="https://dennissnellenberg.com" class="btn-click magnetic" data-strength="24"
+                data-strength-text="12">
+                <span class="btn-text">
+                  <span class="btn-text-inner">Home</span>
+                </span>
+              </a>
+            </li>
+            <li class="btn btn-link">
+              <a href="https://dennissnellenberg.com/work" class="btn-click magnetic" data-strength="24"
+                data-strength-text="12">
+                <span class="btn-text">
+                  <span class="btn-text-inner">Work</span>
+                </span>
+              </a>
+            </li>
+            <li class="btn btn-link">
+              <a href="https://dennissnellenberg.com/about" class="btn-click magnetic" data-strength="24"
+                data-strength-text="12">
+                <span class="btn-text">
+                  <span class="btn-text-inner">About</span>
+                </span>
+              </a>
+            </li>
+            <li class="btn btn-link">
+              <a href="https://dennissnellenberg.com/contact" class="btn-click magnetic" data-strength="24"
+                data-strength-text="12">
+                <span class="btn-text">
+                  <span class="btn-text-inner">Contact</span>
+                </span>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="row social-row">
+          <div class="stripe">
+          </div>
+          <div class="socials">
+            <h5>
+              Socials
+            </h5>
+            <ul>
+              <li class="btn btn-link btn-link-external">
+                <a href="https://www.awwwards.com/dennissnellenberg/" target="_blank" class="btn-click magnetic"
+                  data-strength="20" data-strength-text="10">
+                  <span class="btn-text">
+                    <span class="btn-text-inner">Awwwards</span>
+                  </span>
+                </a>
+              </li>
+              <li class="btn btn-link btn-link-external">
+                <a href="https://www.instagram.com/codebydennis/" target="_blank" class="btn-click magnetic"
+                  data-strength="20" data-strength-text="10">
+                  <span class="btn-text">
+                    <span class="btn-text-inner">Instagram</span>
+                  </span>
+                </a>
+              </li>
+              <li class="btn btn-link btn-link-external">
+                <a href="https://twitter.com/codebydennis" target="_blank" class="btn-click magnetic" data-strength="20"
+                  data-strength-text="10">
+                  <span class="btn-text">
+                    <span class="btn-text-inner">Twitter</span>
+                  </span>
+                </a>
+              </li>
+              <li class="btn btn-link btn-link-external">
+                <a href="https://www.linkedin.com/in/dennissnellenberg/" target="_blank" class="btn-click magnetic"
+                  data-strength="20" data-strength-text="10">
+                  <span class="btn-text">
+                    <span class="btn-text-inner">LinkedIn</span>
+                  </span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="main-wrap" data-scroll-container="">
+      <header class="section home-header theme-dark" data-scroll-section="">
+        <div class="overlay personal-image no-select once-in" data-scroll="" data-scroll-speed="-3"
+          data-scroll-position="top">
+          <img src="https://dennissnellenberg.com/assets/img/DSC07033.jpg" />
+        </div>
+        <div class="overlay get-height once-in once-in-secondary">
+          <div class="hanger">
+            <p>
+              <span>Located</span>
+              <span>in the</span>
+              <span>Netherlands</span>
+            </p>
+            <!--?xml version="1.0" encoding="UTF-8"?-->
+            <svg width="300px" height="121px" viewBox="0 0 300 121" version="1.1" xmlns="http://www.w3.org/2000/svg"
+              xlink="http://www.w3.org/1999/xlink">
+              <title>
+                Combined Shape
+              </title>
+              <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <g id="Artboard" transform="translate(0.000000, -366.000000)" fill="#1C1D20">
+                  <g id="Group"
+                    transform="translate(149.816828, 426.633657) rotate(90.000000) translate(-149.816828, -426.633657) translate(89.816828, 276.816828)">
+                    <g id="Hanger"
+                      transform="translate(60.000000, 149.816828) rotate(-90.000000) translate(-60.000000, -149.816828) translate(-89.816828, 89.816828)">
+                      <path
+                        d="M239.633657,0 C272.770742,1.0182436e-15 299.633657,26.862915 299.633657,60 C299.633657,93.137085 272.770742,120 239.633657,120 L0,120 L0,0 L239.633657,0 Z M239.633657,18.7755102 C216.866,18.7755102 198.409167,37.232343 198.409167,60 C198.409167,82.767657 216.866,101.22449 239.633657,101.22449 C262.401314,101.22449 280.858147,82.767657 280.858147,60 C280.858147,37.232343 262.401314,18.7755102 239.633657,18.7755102 Z"
+                        id="Combined-Shape">
+                      </path>
+                    </g>
+                  </g>
+                </g>
+              </g>
+            </svg>
+            <div class="digital-ball">
+              <div class="overlay">
+              </div>
+              <div class="globe">
+                <div class="globe-wrap">
+                  <div class="circle">
+                  </div>
+                  <div class="circle">
+                  </div>
+                  <div class="circle">
+                  </div>
+                  <div class="circle-hor">
+                  </div>
+                  <div class="circle-hor-middle">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="nav-bar">
+          <div class="credits-top">
+            <div class="btn btn-link btn-left-top">
+              <a href="https://dennissnellenberg.com" class="btn-click magnetic" data-strength="20"
+                data-strength-text="10">
+                <span class="btn-text">
+                  <div class="credit">
+                    <span>©</span>
+                  </div>
+                  <div class="cbd">
+                    <span class="code-by">Code by</span>
+                    <span class="dennis">
+                      <span class="dennis-span">Dennis</span>
+                      <span class="snellenberg">Snellenberg</span>
+                    </span>
+                  </div>
+                </span>
+              </a>
+            </div>
+          </div>
+          <ul class="links-wrap">
+            <li class="btn btn-link">
+              <a href="https://dennissnellenberg.com/work" class="btn-click magnetic" data-strength="20"
+                data-strength-text="10">
+                <span class="btn-text">
+                  <span class="btn-text-inner">Work</span>
+                </span>
+              </a>
+            </li>
+            <li class="btn btn-link">
+              <a href="https://dennissnellenberg.com/about" class="btn-click magnetic" data-strength="20"
+                data-strength-text="10">
+                <span class="btn-text">
+                  <span class="btn-text-inner">About</span>
+                </span>
+              </a>
+            </li>
+            <li class="btn btn-link">
+              <a href="https://dennissnellenberg.com/contact" class="btn-click magnetic" data-strength="20"
+                data-strength-text="10">
+                <span class="btn-text">
+                  <span class="btn-text-inner">Contact</span>
+                </span>
+              </a>
+            </li>
+            <li class="btn btn-link btn-menu">
+              <div class="btn-click magnetic" data-strength="20" data-strength-text="10">
+                <div class="btn-text">
+                  <span class="btn-text-inner">Menu</span>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="container once-in once-in-secondary">
+          <div class="row">
+            <div class="flex-col">
+              <div class="header-above-h4" data-scroll="" data-scroll-speed="1">
+                <div class="arrow big">
+                  <!--?xml version="1.0" encoding="UTF-8"?-->
+                  <svg width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                    xlink="http://www.w3.org/1999/xlink">
+                    <title>
+                      arrow-up-right
+                    </title>
+                    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                      <g id="Artboard" transform="translate(-1019.000000, -279.000000)" stroke="#FFFFFF"
+                        stroke-width="1.5">
+                        <g id="arrow-up-right"
+                          transform="translate(1026.000000, 286.000000) rotate(90.000000) translate(-1026.000000, -286.000000) translate(1020.000000, 280.000000)">
+                          <polyline id="Path" points="2.76923077 0 12 0 12 9.23076923">
+                          </polyline>
+                          <line x1="12" y1="0" x2="0" y2="12" id="Path">
+                          </line>
+                        </g>
+                      </g>
+                    </g>
+                  </svg>
+                </div>
+              </div>
+              <h4>
+                <span>Freelance</span>
+                Designer &amp; Developer
+              </h4>
+            </div>
+          </div>
+        </div>
+        <div class="big-name">
+          <div class="name-h1" data-scroll="" data-scroll-direction="horizontal" data-scroll-speed="4"
+            data-scroll-position="top">
+            <div class="name-wrap">
+              <h1 class="no-select once-in once-in-secondary">
+                Dennis Snellenberg
+                <span class="spacer">—</span>
+              </h1>
+            </div>
+          </div>
+        </div>
+        <div class="white-block">
+        </div>
+      </header>
+      <section class="section home-intro" data-scroll-section="">
+        <div class="container medium">
+          <div class="row">
+            <div class="flex-col">
+              <h4 class="span-lines animate">
+                Helping brands to stand out in the digital era. Together we will set the new status quo. No nonsense,
+                always on the cutting edge.
+              </h4>
+            </div>
+            <div class="flex-col">
+              <div class="text-wrap fade-in animate">
+                <p>
+                  The combination of my passion for design, code &amp; interaction positions me in a unique place in the
+                  web design world.
+                </p>
+              </div>
+              <div class="btn btn-round" data-scroll="" data-scroll-speed="2">
+                <a href="https://dennissnellenberg.com/about" class="btn-click magnetic " data-strength="100"
+                  data-strength-text="50">
+                  <div class="btn-fill">
+                  </div>
+                  <span class="btn-text">
+                    <span class="btn-text-inner">About me</span>
+                  </span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="section work-grid large-work-grid" data-scroll-section="">
+        <div class="container">
+          <div class="grid-sub-title">
+            <div class="flex-col">
+              <h5>
+                Recent work
+              </h5>
+            </div>
+          </div>
+          <ul class="work-items mouse-pos-list-image-wrap">
+            <li class="development interaction visible">
+              <div class="stripe animate">
+              </div>
+              <a href="https://dennissnellenberg.com/work/twice" class="row">
+                <div class="flex-col">
+                  <h4>
+                    <span>TWICE</span>
+                  </h4>
+                </div>
+                <div class="flex-col animate">
+                  <p>
+                    Interaction &amp; Development
+                  </p>
+                </div>
+              </a>
+            </li>
+            <li class="design development interaction visible">
+              <div class="stripe animate">
+              </div>
+              <a href="https://dennissnellenberg.com/work/the-damai" class="row">
+                <div class="flex-col">
+                  <h4>
+                    <span>The Damai</span>
+                  </h4>
+                </div>
+                <div class="flex-col animate">
+                  <p>
+                    Design &amp; Development
+                  </p>
+                </div>
+              </a>
+            </li>
+            <li class="design development interaction visible">
+              <div class="stripe animate">
+              </div>
+              <a href="https://dennissnellenberg.com/work/fabric" class="row">
+                <div class="flex-col">
+                  <h4>
+                    <span>FABRIC™</span>
+                  </h4>
+                </div>
+                <div class="flex-col animate">
+                  <p>
+                    Design &amp; Development
+                  </p>
+                </div>
+              </a>
+            </li>
+            <li class="design development interaction visible">
+              <div class="stripe animate">
+              </div>
+              <a href="https://dennissnellenberg.com/work/aanstekelijk" class="row">
+                <div class="flex-col">
+                  <h4>
+                    <span>Aanstekelijk</span>
+                  </h4>
+                </div>
+                <div class="flex-col animate">
+                  <p>
+                    Design &amp; Development
+                  </p>
+                </div>
+              </a>
+            </li>
+            <div class="stripe last animate">
+            </div>
+          </ul>
+        </div>
+      </section>
+      <section class="section work-tiles work-tiles-home" data-scroll-section="">
+        <div class="container">
+          <ul>
+            <li class="development interaction visible">
+              <div class="single-tile-wrap">
+                <a href="https://dennissnellenberg.com/work/twice" class="row">
+                  <div class="flex-col">
+                    <div class="tile-image">
+                      <div class="overlay overlay-image lazy"
+                        style="background-color: #F1F1F1; background-position: center center; background-repeat: no-repeat; background-size: cover;"
+                        data-bg="https://dennissnellenberg.com/media/pages/work/twice/0ab7e43954-1710404752/thumbnail-twice.jpg">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flex-col">
+                    <h4>
+                      <span>TWICE</span>
+                    </h4>
+                    <div class="stripe">
+                    </div>
+                  </div>
+                  <div class="flex-col">
+                    <p>
+                      Interaction &amp; Development
+                    </p>
+                  </div>
+                  <div class="flex-col">
+                    <p>
+                      2024
+                    </p>
+                  </div>
+                </a>
+              </div>
+            </li>
+            <li class="design development interaction visible">
+              <div class="single-tile-wrap">
+                <a href="https://dennissnellenberg.com/work/the-damai" class="row">
+                  <div class="flex-col">
+                    <div class="tile-image">
+                      <div class="overlay overlay-image lazy"
+                        style="background-color: #E0D9D1; background-position: center center; background-repeat: no-repeat; background-size: cover;"
+                        data-bg="https://dennissnellenberg.com/media/pages/work/the-damai/b511d32d21-1710452224/thumbnail-thedamai-v2.jpg">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flex-col">
+                    <h4>
+                      <span>The Damai</span>
+                    </h4>
+                    <div class="stripe">
+                    </div>
+                  </div>
+                  <div class="flex-col">
+                    <p>
+                      Design &amp; Development
+                    </p>
+                  </div>
+                  <div class="flex-col">
+                    <p>
+                      2024
+                    </p>
+                  </div>
+                </a>
+              </div>
+            </li>
+            <li class="design development interaction visible">
+              <div class="single-tile-wrap">
+                <a href="https://dennissnellenberg.com/work/fabric" class="row">
+                  <div class="flex-col">
+                    <div class="tile-image">
+                      <div class="overlay overlay-image lazy"
+                        style="background-color: #48494A; background-position: center center; background-repeat: no-repeat; background-size: cover;"
+                        data-bg="https://dennissnellenberg.com/media/pages/work/fabric/ac07564a5f-1688453092/thumbnail-fabric-darkgray.jpg">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flex-col">
+                    <h4>
+                      <span>FABRIC™</span>
+                    </h4>
+                    <div class="stripe">
+                    </div>
+                  </div>
+                  <div class="flex-col">
+                    <p>
+                      Design &amp; Development
+                    </p>
+                  </div>
+                  <div class="flex-col">
+                    <p>
+                      2023
+                    </p>
+                  </div>
+                </a>
+              </div>
+            </li>
+            <li class="design development interaction visible">
+              <div class="single-tile-wrap">
+                <a href="https://dennissnellenberg.com/work/aanstekelijk" class="row">
+                  <div class="flex-col">
+                    <div class="tile-image">
+                      <div class="overlay overlay-image lazy"
+                        style="background-color: #101010; background-position: center center; background-repeat: no-repeat; background-size: cover;"
+                        data-bg="https://dennissnellenberg.com/media/pages/work/aanstekelijk/441187fb44-1687423090/thumbnail-aanstekelijk.jpg">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flex-col">
+                    <h4>
+                      <span>Aanstekelijk</span>
+                    </h4>
+                    <div class="stripe">
+                    </div>
+                  </div>
+                  <div class="flex-col">
+                    <p>
+                      Design &amp; Development
+                    </p>
+                  </div>
+                  <div class="flex-col">
+                    <p>
+                      2023
+                    </p>
+                  </div>
+                </a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </section>
+      <section class="section center-grid-btn center-grid-btn-home" data-scroll-section="">
+        <div class="container">
+          <div class="grid-after-btn">
+            <div class="btn btn-normal">
+              <a href="https://dennissnellenberg.com/work" class="btn-click magnetic" data-strength="25"
+                data-strength-text="15">
+                <div class="btn-fill">
+                </div>
+                <span class="btn-text">
+                  <span class="btn-text-inner change">More work
+                    <div class="count-nr">
+                      11
+                    </div>
+                  </span>
+                </span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="section horizontal-items" data-scroll-section="">
+        <div class="container">
+          <div class="row row-1" data-scroll="" data-scroll-speed="-1" data-scroll-direction="horizontal">
+            <div class="flex-col">
+              <div class="horizontal-single-item">
+                <div class="overlay lazy"
+                  style="background-position: center center; background-repeat: no-repeat; background-size: cover;"
+                  data-bg="https://dennissnellenberg.com/assets/img/home-item-1.jpg">
+                </div>
+              </div>
+            </div>
+            <div class="flex-col">
+              <div class="horizontal-single-item">
+                <div class="overlay playpauze">
+                  <video class="overlay lazy" src="https://dennissnellenberg.com/assets/img/home-item-2.mp4" loop=""
+                    muted="" playsinline="">
+                  </video>
+                </div>
+              </div>
+            </div>
+            <div class="flex-col">
+              <div class="horizontal-single-item">
+                <div class="overlay lazy"
+                  style="background-position: center center; background-repeat: no-repeat; background-size: cover;"
+                  data-bg="https://dennissnellenberg.com/assets/img/home-item-3.jpg">
+                </div>
+              </div>
+            </div>
+            <div class="flex-col">
+              <div class="horizontal-single-item">
+                <div class="overlay playpauze">
+                  <video class="overlay lazy" src="https://dennissnellenberg.com/assets/img/home-item-4.mp4" loop=""
+                    muted="" playsinline="">
+                  </video>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row row-2" data-scroll="" data-scroll-speed="1" data-scroll-direction="horizontal">
+            <div class="flex-col">
+              <div class="horizontal-single-item">
+                <div class="overlay playpauze">
+                  <video class="overlay lazy" src="https://dennissnellenberg.com/assets/img/home-item-5.mp4" loop=""
+                    muted="" playsinline="">
+                  </video>
+                </div>
+              </div>
+            </div>
+            <div class="flex-col">
+              <div class="horizontal-single-item">
+                <div class="overlay lazy"
+                  style="background-position: center center; background-repeat: no-repeat; background-size: cover;"
+                  data-bg="https://dennissnellenberg.com/assets/img/home-item-6.jpg">
+                </div>
+              </div>
+            </div>
+            <div class="flex-col">
+              <div class="horizontal-single-item">
+                <div class="overlay playpauze">
+                  <video class="overlay lazy" src="https://dennissnellenberg.com/assets/img/home-item-7.mp4" loop=""
+                    muted="" playsinline="">
+                  </video>
+                </div>
+              </div>
+            </div>
+            <div class="flex-col">
+              <div class="horizontal-single-item">
+                <div class="overlay lazy"
+                  style="background-position: center center; background-repeat: no-repeat; background-size: cover;"
+                  data-bg="https://dennissnellenberg.com/assets/img/home-item-8.jpg">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <div class="footer-rounded-div" data-scroll-section="">
+        <div class="rounded-div-wrap">
+          <div class="rounded-div">
+          </div>
+        </div>
+      </div>
+      <div class="footer-wrap footer-footer-wrap theme-dark" data-scroll-section="">
+        <footer class="section footer" data-scroll="" data-scroll-speed="-4" data-scroll-position="bottom">
+          <div class="container medium">
+            <div class="row">
+              <div class="flex-col">
+                <div class="arrow">
+                  <!--?xml version="1.0" encoding="UTF-8"?-->
+                  <svg width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                    xlink="http://www.w3.org/1999/xlink">
+                    <title>
+                      arrow-up-right
+                    </title>
+                    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                      <g id="Artboard" transform="translate(-1019.000000, -279.000000)" stroke="#FFFFFF"
+                        stroke-width="1.5">
+                        <g id="arrow-up-right"
+                          transform="translate(1026.000000, 286.000000) rotate(90.000000) translate(-1026.000000, -286.000000) translate(1020.000000, 280.000000)">
+                          <polyline id="Path" points="2.76923077 0 12 0 12 9.23076923">
+                          </polyline>
+                          <line x1="12" y1="0" x2="0" y2="12" id="Path">
+                          </line>
+                        </g>
+                      </g>
+                    </g>
+                  </svg>
+                </div>
+                <h2>
+                  <span>
+                    <div class="profile-picture">
+                    </div>
+                    Let’s work
+                  </span>
+                  <span>together</span>
+                </h2>
+              </div>
+            </div>
+            <div class="row">
+              <div class="flex-col">
+                <div class="stripe">
+                </div>
+                <div class="btn-fixed">
+                  <div class="btn btn-round" data-scroll="" data-scroll-speed="-1" data-scroll-direction="horizontal"
+                    data-scroll-position="bottom" data-scroll-offset="-50%, 0">
+                    <a href="https://dennissnellenberg.com/contact" class="btn-click magnetic " data-strength="100"
+                      data-strength-text="50">
+                      <div class="btn-fill">
+                      </div>
+                      <span class="btn-text">
+                        <span class="btn-text-inner">Get in touch</span>
+                      </span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="flex-col">
+                <div class="btn btn-normal">
+                  <a href="mailto:info@dennissnellenberg.com" class="btn-click magnetic" data-strength="25"
+                    data-strength-text="15">
+                    <div class="btn-fill">
+                    </div>
+                    <span class="btn-text">
+                      <span class="btn-text-inner change">info@dennissnellenberg.com</span>
+                    </span>
+                  </a>
+                </div>
+                <div class="btn btn-normal">
+                  <a href="tel:+31627847430" class="btn-click magnetic" data-strength="25" data-strength-text="15">
+                    <div class="btn-fill">
+                    </div>
+                    <span class="btn-text">
+                      <span class="btn-text-inner change">+31 6 27 84 74 30</span>
+                    </span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="container no-padding">
+            <div class="row bottom-footer">
+              <div class="flex-col">
+                <div class="credits">
+                  <h5>
+                    Version
+                  </h5>
+                  <p>
+                    2022 © Edition
+                  </p>
+                </div>
+                <div class="time">
+                  <h5>
+                    Local time
+                  </h5>
+                  <p>
+                    <span id="timeSpan">09:41 PM CET</span>
+                  </p>
+                </div>
+              </div>
+              <div class="flex-col">
+                <div class="socials">
+                  <h5>
+                    Socials
+                  </h5>
+                  <ul>
+                    <li class="btn btn-link btn-link-external">
+                      <a href="https://www.awwwards.com/dennissnellenberg/" target="_blank" class="btn-click magnetic"
+                        data-strength="20" data-strength-text="10">
+                        <span class="btn-text">
+                          <span class="btn-text-inner">Awwwards</span>
+                        </span>
+                      </a>
+                    </li>
+                    <li class="btn btn-link btn-link-external">
+                      <a href="https://www.instagram.com/codebydennis/" target="_blank" class="btn-click magnetic"
+                        data-strength="20" data-strength-text="10">
+                        <span class="btn-text">
+                          <span class="btn-text-inner">Instagram</span>
+                        </span>
+                      </a>
+                    </li>
+                    <li class="btn btn-link btn-link-external">
+                      <a href="https://twitter.com/codebydennis" target="_blank" class="btn-click magnetic"
+                        data-strength="20" data-strength-text="10">
+                        <span class="btn-text">
+                          <span class="btn-text-inner">Twitter</span>
+                        </span>
+                      </a>
+                    </li>
+                    <li class="btn btn-link btn-link-external">
+                      <a href="https://www.linkedin.com/in/dennissnellenberg/" target="_blank"
+                        class="btn-click magnetic" data-strength="20" data-strength-text="10">
+                        <span class="btn-text">
+                          <span class="btn-text-inner">LinkedIn</span>
+                        </span>
+                      </a>
+                    </li>
+                  </ul>
+                  <div class="stripe">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </footer>
+        <div class="overlay overlay-gradient">
+        </div>
+      </div>
+    </div>
+  </main>
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.0/js.cookie.min.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/ScrollTrigger.min.js">
+  </script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/@barba/core"></script> -->
+  <!-- <script src="https://cdn.jsdelivr.net/npm/@barba/core@2.9.7"></script> -->
+  <script src="https://cdn.jsdelivr.net/npm/@barba/core@2.10.3">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.6.1/dist/lazyload.min.js">
+  </script>
+  <script src="https://dennissnellenberg.com/assets/js/locomotive-scroll.min.js">
+  </script>
+  <script defer="" src="https://dennissnellenberg.com/assets/js/index-new.js">
   </script>
 </body>
+
 </html>
